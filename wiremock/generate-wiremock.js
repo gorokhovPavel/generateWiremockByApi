@@ -220,10 +220,11 @@ function extractExample(mediaType, schema) {
 
 /**
  * Генерирует мок-значение по JSON-схеме, когда в спеке нет готового example.
- * seen — множество схем на текущем пути рекурсии (защита от циклических $ref),
- * depth — жёсткий лимит глубины на случай очень вложенных схем.
+ * seen      — множество схем на текущем пути рекурсии (защита от циклических $ref)
+ * depth     — жёсткий лимит глубины на случай очень вложенных схем
+ * fieldName — имя поля-владельца; передаётся в leaf-генераторы для семантических значений
  */
-function generateMock(schema, seen, depth) {
+function generateMock(schema, seen, depth, fieldName = '') {
   if (!schema || depth > MAX_DEPTH || seen.has(schema)) return null;
   if (schema.example !== undefined) return schema.example;
   if (schema.default !== undefined) return schema.default;
@@ -234,40 +235,39 @@ function generateMock(schema, seen, depth) {
 
   try {
     if (schema.allOf) {
-      // Объединяем все составляющие allOf в один объект
       result = schema.allOf.reduce((acc, sub) => {
-        const value = generateMock(sub, seen, depth + 1);
+        const value = generateMock(sub, seen, depth + 1, fieldName);
         return value && typeof value === 'object' && !Array.isArray(value) ? { ...acc, ...value } : acc;
       }, {});
     } else if (schema.oneOf) {
-      result = generateMock(schema.oneOf[0], seen, depth + 1);
+      result = generateMock(schema.oneOf[0], seen, depth + 1, fieldName);
     } else if (schema.anyOf) {
-      result = generateMock(schema.anyOf[0], seen, depth + 1);
+      result = generateMock(schema.anyOf[0], seen, depth + 1, fieldName);
     } else {
       const type = schema.type || (schema.properties ? 'object' : undefined);
 
       switch (type) {
         case 'string':
-          result = mockString(schema);
+          result = mockString(schema, fieldName);
           break;
         case 'integer':
-          result = schema.minimum ?? 1;
+          result = mockInteger(schema, fieldName);
           break;
         case 'number':
-          result = schema.minimum ?? 1.5;
+          result = mockNumber(schema, fieldName);
           break;
         case 'boolean':
-          result = true;
+          result = mockBoolean(fieldName);
           break;
         case 'array': {
-          const item = generateMock(schema.items, seen, depth + 1);
+          const item = generateMock(schema.items, seen, depth + 1, fieldName);
           result = item === undefined ? [] : [item];
           break;
         }
         case 'object': {
           const obj = {};
           for (const [key, propSchema] of Object.entries(schema.properties || {})) {
-            obj[key] = generateMock(propSchema, seen, depth + 1);
+            obj[key] = generateMock(propSchema, seen, depth + 1, key);
           }
           result = obj;
           break;
@@ -283,27 +283,112 @@ function generateMock(schema, seen, depth) {
   return result;
 }
 
-/** Простейшая генерация строк с учётом распространённых форматов OpenAPI. */
-function mockString(schema) {
+/** Генерация строк: сначала format из схемы, затем эвристика по имени поля. */
+function mockString(schema, fieldName = '') {
   switch (schema.format) {
-    case 'date-time':
-      return '2024-01-01T00:00:00Z';
-    case 'date':
-      return '2024-01-01';
-    case 'email':
-      return 'user@example.com';
-    case 'uuid':
-      return '3fa85f64-5717-4562-b3fc-2c963f66afa6';
+    case 'date-time': return '2024-01-01T00:00:00Z';
+    case 'date':      return '2024-01-01';
+    case 'time':      return '12:00:00';
+    case 'email':     return 'user@example.com';
+    case 'uuid':      return '3fa85f64-5717-4562-b3fc-2c963f66afa6';
     case 'uri':
-    case 'url':
-      return 'https://example.com';
-    case 'byte':
-      return 'c3RyaW5n';
-    case 'password':
-      return '********';
-    default:
-      return 'string';
+    case 'url':       return 'https://example.com';
+    case 'byte':      return 'c3RyaW5n';
+    case 'binary':    return '<binary>';
+    case 'password':  return '********';
+    case 'hostname':  return 'example.com';
+    case 'ipv4':      return '192.168.0.1';
+    case 'ipv6':      return '::1';
   }
+
+  const n = fieldName.toLowerCase();
+
+  if (/email/.test(n))                              return 'user@example.com';
+  if (/(url|uri|link|href|website|homepage)/.test(n)) return 'https://example.com';
+  if (/(uuid|guid)/.test(n))                        return '3fa85f64-5717-4562-b3fc-2c963f66afa6';
+  if (/(avatar|photo|picture|image|thumbnail|icon|logo)/.test(n)) return 'https://example.com/image.png';
+  if (/(phone|mobile|tel)/.test(n))                 return '+1-555-000-0000';
+  if (/first.?name|firstname|given.?name/.test(n))  return 'John';
+  if (/last.?name|lastname|surname|family.?name/.test(n)) return 'Doe';
+  if (/(display.?name|full.?name|fullname)/.test(n)) return 'John Doe';
+  if (/(username|login)/.test(n))                   return 'john_doe';
+  if (/\bname\b/.test(n))                           return 'John Doe';
+  if (/(description|summary|overview|bio|about)/.test(n)) return 'Example description';
+  if (/(message|body|content|text|comment|note|remark)/.test(n)) return 'Example text content';
+  if (/(title|heading|caption|subject)/.test(n))    return 'Example Title';
+  if (/(label|badge|tag)/.test(n))                  return 'example-tag';
+  if (/\bslug\b/.test(n))                           return 'example-slug';
+  if (/(street|addr)/.test(n))                      return '123 Main Street';
+  if (/\bcity\b/.test(n))                           return 'New York';
+  if (/\bcountry\b/.test(n))                        return 'US';
+  if (/(state|province|region)/.test(n))            return 'NY';
+  if (/(zip|postal)/.test(n))                       return '10001';
+  if (/\bstatus\b/.test(n))                         return 'active';
+  if (/(color|colour)/.test(n))                     return '#FF5733';
+  if (/\bcurrency\b/.test(n))                       return 'USD';
+  if (/(language|locale|lang)/.test(n))             return 'en';
+  if (/(timezone|time.?zone)/.test(n))              return 'UTC';
+  if (/(company|organization|employer)/.test(n))    return 'Example Corp';
+  if (/\bversion\b/.test(n))                        return '1.0.0';
+  if (/(type|kind|category|genre)/.test(n))         return 'default';
+  if (/(role|permission|scope)/.test(n))            return 'user';
+  if (/(token|api.?key|secret)/.test(n))            return 'tok_example_1234567890abcdef';
+  if (/(hash|checksum|sha|md5)/.test(n))            return 'abc123def456';
+  if (/\bkey\b/.test(n))                            return 'example_key';
+  if (/(path|route|endpoint)/.test(n))              return '/example/path';
+  if (/code/.test(n))                               return 'EXAMPLE_CODE';
+  if (/\bid$/.test(n))                              return 'id_example_1';
+
+  return 'string';
+}
+
+/** Генерация целых чисел с учётом семантики имени поля. */
+function mockInteger(schema, fieldName = '') {
+  if (schema.minimum !== undefined) return schema.minimum;
+
+  const n = fieldName.toLowerCase();
+
+  if (/\bage\b/.test(n))                        return 25;
+  if (/year/.test(n))                           return 2024;
+  if (/(limit|per.?page|page.?size)/.test(n))  return 20;
+  if (/(page|offset|skip|index)/.test(n))       return 1;
+  if (/(count|total|size|length|quantity)/.test(n)) return 10;
+  if (/(percent|percentage)/.test(n))           return 50;
+  if (/(rating|score|rank|priority)/.test(n))   return 4;
+  if (/(price|cost|amount|sum)/.test(n))        return 100;
+  if (/\bport\b/.test(n))                       return 8080;
+  if (/(timeout|ttl|expir)/.test(n))            return 30;
+  if (/\bweight\b/.test(n))                     return 70;
+  if (/\bheight\b/.test(n))                     return 180;
+  if (/\bwidth\b/.test(n))                      return 1920;
+  if (/\bid\b/.test(n))                         return 1;
+
+  return 1;
+}
+
+/** Генерация дробных чисел с учётом семантики имени поля. */
+function mockNumber(schema, fieldName = '') {
+  if (schema.minimum !== undefined) return schema.minimum;
+
+  const n = fieldName.toLowerCase();
+
+  if (/(price|cost|amount|sum)/.test(n))   return 99.99;
+  if (/(percent|percentage|rate)/.test(n)) return 0.5;
+  if (/(rating|score)/.test(n))            return 4.5;
+  if (/lat(itude)?/.test(n))               return 40.7128;
+  if (/(lon(gitude)?|lng)/.test(n))        return -74.006;
+  if (/\bweight\b/.test(n))                return 70.5;
+  if (/\bheight\b/.test(n))                return 180.0;
+  if (/(temp(erature)?)/.test(n))          return 20.5;
+
+  return 1.5;
+}
+
+/** Генерация булевых: поля с негативным смыслом → false, остальные → true. */
+function mockBoolean(fieldName = '') {
+  const n = fieldName.toLowerCase();
+  if (/(deleted|disabled|hidden|archived|suspended|banned|blocked|closed|locked)/.test(n)) return false;
+  return true;
 }
 
 /** Превращает "/repos/{owner}/{repo}" + "get" в "get_repos_owner_repo". */
