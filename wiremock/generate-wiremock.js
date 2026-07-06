@@ -103,22 +103,26 @@ async function main() {
         continue;
       }
 
-      // Существующий эндпоинт — сравниваем с тем, что сгенерировано сейчас
+      // Существующий эндпоинт — обновляем маппинг, в теле ответа только добавляем новые поля
       const existingMapping = fs.readJsonSync(path.join(MAPPINGS_DIR, `${slug}.json`));
       const mappingChanged = JSON.stringify(existingMapping) !== JSON.stringify(newMapping);
 
+      let mergedBody;
       let bodyChanged = false;
       if (newBody !== undefined) {
         const bodyFilePath = path.join(FILES_DIR, responseFileName);
         if (!fs.existsSync(bodyFilePath)) {
+          mergedBody = newBody;
           bodyChanged = true;
         } else {
-          bodyChanged = JSON.stringify(fs.readJsonSync(bodyFilePath)) !== JSON.stringify(newBody);
+          const existingBody = fs.readJsonSync(bodyFilePath);
+          mergedBody = deepMergePreferExisting(newBody, existingBody);
+          bodyChanged = JSON.stringify(existingBody) !== JSON.stringify(mergedBody);
         }
       }
 
       if (mappingChanged || bodyChanged) {
-        if (newBody !== undefined) fs.writeJsonSync(path.join(FILES_DIR, responseFileName), newBody, { spaces: 2 });
+        if (mergedBody !== undefined) fs.writeJsonSync(path.join(FILES_DIR, responseFileName), mergedBody, { spaces: 2 });
         fs.writeJsonSync(path.join(MAPPINGS_DIR, `${slug}.json`), newMapping, { spaces: 2 });
         updated++;
         console.log(`  ~ ${slug}`);
@@ -389,6 +393,28 @@ function mockBoolean(fieldName = '') {
   const n = fieldName.toLowerCase();
   if (/(deleted|disabled|hidden|archived|suspended|banned|blocked|closed|locked)/.test(n)) return false;
   return true;
+}
+
+/**
+ * Сливает newVal и existingVal: существующие значения имеют приоритет.
+ * Для объектов — рекурсивно: новые ключи из newVal добавляются, существующие не трогаются.
+ * Для примитивов, массивов и null — возвращает existingVal если он определён.
+ */
+function deepMergePreferExisting(newVal, existingVal) {
+  if (isPlainObject(newVal) && isPlainObject(existingVal)) {
+    const result = { ...existingVal };
+    for (const key of Object.keys(newVal)) {
+      result[key] = key in existingVal
+        ? deepMergePreferExisting(newVal[key], existingVal[key])
+        : newVal[key];
+    }
+    return result;
+  }
+  return existingVal !== undefined ? existingVal : newVal;
+}
+
+function isPlainObject(v) {
+  return v !== null && typeof v === 'object' && !Array.isArray(v);
 }
 
 /** Превращает "/repos/{owner}/{repo}" + "get" в "get_repos_owner_repo". */
