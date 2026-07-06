@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/orgs/[^/]+/insights/api/user-stats/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_orgs_org_insights_api_user_stats_user_id-response.json"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/orgs/[^/]+/copilot/metrics/reports/organization-28-day/latest"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_orgs_org_copilot_metrics_reports_organization_28_day_latest-response.json"
+  }
+}

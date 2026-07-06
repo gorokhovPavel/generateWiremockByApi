@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/orgs/[^/]+/actions/hosted-runners/images/custom/[^/]+/versions/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_orgs_org_actions_hosted_runners_images_custom_image_definition_id_versions_version-response.json"
+  }
+}

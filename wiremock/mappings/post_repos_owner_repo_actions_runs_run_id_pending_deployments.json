@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/actions/runs/[^/]+/pending_deployments"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_repos_owner_repo_actions_runs_run_id_pending_deployments-response.json"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/orgs/[^/]+/packages/[^/]+/[^/]+/versions/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_orgs_org_packages_package_type_package_name_versions_package_version_id-response.json"
+  }
+}

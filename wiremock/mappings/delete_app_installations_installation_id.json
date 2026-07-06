@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/app/installations/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

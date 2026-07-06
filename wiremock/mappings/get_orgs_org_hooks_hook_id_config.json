@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/orgs/[^/]+/hooks/[^/]+/config"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_orgs_org_hooks_hook_id_config-response.json"
+  }
+}

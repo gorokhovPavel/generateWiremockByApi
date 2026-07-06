@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/enterprises/[^/]+/teams/[^/]+/organizations/add"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_enterprises_enterprise_teams_enterprise_team_organizations_add-response.json"
+  }
+}

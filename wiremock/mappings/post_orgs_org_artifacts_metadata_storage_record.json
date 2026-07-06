@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/orgs/[^/]+/artifacts/metadata/storage-record"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_orgs_org_artifacts_metadata_storage_record-response.json"
+  }
+}

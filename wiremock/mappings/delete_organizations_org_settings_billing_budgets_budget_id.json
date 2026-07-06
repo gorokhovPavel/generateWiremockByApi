@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/organizations/[^/]+/settings/billing/budgets/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "delete_organizations_org_settings_billing_budgets_budget_id-response.json"
+  }
+}

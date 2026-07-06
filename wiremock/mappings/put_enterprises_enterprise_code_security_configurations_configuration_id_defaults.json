@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/enterprises/[^/]+/code-security/configurations/[^/]+/defaults"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "put_enterprises_enterprise_code_security_configurations_configuration_id_defaults-response.json"
+  }
+}

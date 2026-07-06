@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/pulls/[^/]+/comments"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_repos_owner_repo_pulls_pull_number_comments-response.json"
+  }
+}

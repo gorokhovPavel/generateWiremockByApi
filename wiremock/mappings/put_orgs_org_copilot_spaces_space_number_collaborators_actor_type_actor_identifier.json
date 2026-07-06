@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/orgs/[^/]+/copilot-spaces/[^/]+/collaborators/[^/]+/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "put_orgs_org_copilot_spaces_space_number_collaborators_actor_type_actor_identifier-response.json"
+  }
+}

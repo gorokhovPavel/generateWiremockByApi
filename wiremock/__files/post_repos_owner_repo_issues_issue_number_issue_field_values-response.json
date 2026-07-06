@@ -1,0 +1,54 @@
+[
+  {
+    "issue_field_id": 1,
+    "issue_field_name": "DRI",
+    "node_id": "IFT_GDKND",
+    "data_type": "text",
+    "value": "DRI"
+  },
+  {
+    "issue_field_id": 2,
+    "issue_field_name": "Priority",
+    "node_id": "IFSS_SADMS",
+    "data_type": "single_select",
+    "value": 1,
+    "single_select_option": {
+      "id": 1,
+      "name": "High",
+      "color": "red"
+    }
+  },
+  {
+    "issue_field_id": 3,
+    "issue_field_name": "Points",
+    "node_id": "IFN_POINTS",
+    "data_type": "number",
+    "value": 42
+  },
+  {
+    "issue_field_id": 4,
+    "issue_field_name": "Due Date",
+    "node_id": "IFD_DUEDATE",
+    "data_type": "date",
+    "value": "2025-12-25"
+  },
+  {
+    "issue_field_id": 5,
+    "issue_field_name": "Labels",
+    "node_id": "IFMS_LABELS",
+    "data_type": "multi_select",
+    "value": "Frontend,Backend",
+    "multi_select_options": [
+      {
+        "id": 1,
+        "name": "Frontend",
+        "color": "blue"
+      },
+      {
+        "id": 2,
+        "name": "Backend",
+        "color": "green"
+      }
+    ]
+  }
+]

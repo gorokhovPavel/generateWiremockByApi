@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/collaborators/[^/]+"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "put_repos_owner_repo_collaborators_username-response.json"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/enterprises/[^/]+/copilot/policies/coding_agent"
+  },
+  "response": {
+    "status": 204
+  }
+}

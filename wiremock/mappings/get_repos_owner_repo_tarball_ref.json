@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/tarball/[^/]+"
+  },
+  "response": {
+    "status": 302
+  }
+}

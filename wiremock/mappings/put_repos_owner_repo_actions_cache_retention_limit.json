@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/actions/cache/retention-limit"
+  },
+  "response": {
+    "status": 204
+  }
+}

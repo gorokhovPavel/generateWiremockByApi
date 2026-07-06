@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/actions/permissions/fork-pr-workflows-private-repos"
+  },
+  "response": {
+    "status": 204
+  }
+}

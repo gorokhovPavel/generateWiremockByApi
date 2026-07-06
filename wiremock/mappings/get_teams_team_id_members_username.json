@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/teams/[^/]+/members/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

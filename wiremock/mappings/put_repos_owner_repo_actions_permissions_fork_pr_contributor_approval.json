@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/actions/permissions/fork-pr-contributor-approval"
+  },
+  "response": {
+    "status": 204
+  }
+}

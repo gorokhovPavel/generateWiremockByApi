@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/users/[^/]+/copilot-spaces/[^/]+/collaborators/[^/]+/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

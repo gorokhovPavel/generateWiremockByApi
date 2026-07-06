@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/labels/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "patch_repos_owner_repo_labels_name-response.json"
+  }
+}

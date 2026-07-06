@@ -1,0 +1,60 @@
+{
+  "sbom": {
+    "SPDXID": "SPDXRef-DOCUMENT",
+    "spdxVersion": "SPDX-2.3",
+    "creationInfo": {
+      "created": "2021-09-01T00:00:00Z",
+      "creators": [
+        "Tool: GitHub.com-Dependency-Graph"
+      ]
+    },
+    "name": "github/example",
+    "dataLicense": "CC0-1.0",
+    "documentNamespace": "https://spdx.org/spdxdocs/protobom/15e41dd2-f961-4f4d-b8dc-f8f57ad70d57",
+    "packages": [
+      {
+        "name": "rails",
+        "SPDXID": "SPDXRef-Package",
+        "versionInfo": "1.0.0",
+        "downloadLocation": "NOASSERTION",
+        "filesAnalyzed": false,
+        "licenseConcluded": "MIT",
+        "licenseDeclared": "MIT",
+        "copyrightText": "Copyright (c) 1985 GitHub.com",
+        "externalRefs": [
+          {
+            "referenceCategory": "PACKAGE-MANAGER",
+            "referenceType": "purl",
+            "referenceLocator": "pkg:gem/rails@1.0.0"
+          }
+        ]
+      },
+      {
+        "name": "github/example",
+        "SPDXID": "SPDXRef-Repository",
+        "versionInfo": "main",
+        "downloadLocation": "NOASSERTION",
+        "filesAnalyzed": false,
+        "externalRefs": [
+          {
+            "referenceCategory": "PACKAGE-MANAGER",
+            "referenceType": "purl",
+            "referenceLocator": "pkg:github/example@main"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "relationshipType": "DEPENDS_ON",
+        "spdxElementId": "SPDXRef-Repository",
+        "relatedSpdxElement": "SPDXRef-Package"
+      },
+      {
+        "relationshipType": "DESCRIBES",
+        "spdxElementId": "SPDXRef-DOCUMENT",
+        "relatedSpdxElement": "SPDXRef-Repository"
+      }
+    ]
+  }
+}

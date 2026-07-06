@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/enterprises/[^/]+/copilot/policies/coding_agent/organizations"
+  },
+  "response": {
+    "status": 204
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/agents/repos/[^/]+/[^/]+/tasks"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_agents_repos_owner_repo_tasks-response.json"
+  }
+}

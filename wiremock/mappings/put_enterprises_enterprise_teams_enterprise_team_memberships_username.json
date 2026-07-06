@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/enterprises/[^/]+/teams/[^/]+/memberships/[^/]+"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "put_enterprises_enterprise_teams_enterprise_team_memberships_username-response.json"
+  }
+}

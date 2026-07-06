@@ -1,0 +1,17 @@
+{
+  "total_count": 2,
+  "image_versions": [
+    {
+      "version": "1.1.0",
+      "size_gb": 75,
+      "state": "Ready",
+      "created_on": "2024-11-09T23:39:01Z"
+    },
+    {
+      "version": "1.0.0",
+      "size_gb": 75,
+      "state": "Ready",
+      "created_on": "2024-11-08T20:39:01Z"
+    }
+  ]
+}

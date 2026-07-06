@@ -1,0 +1,13 @@
+{
+  "property_name": "environment",
+  "url": "https://api.github.com/orgs/github/properties/schema/environment",
+  "source_type": "organization",
+  "value_type": "single_select",
+  "required": true,
+  "default_value": "production",
+  "description": "Prod or dev environment",
+  "allowed_values": [
+    "production",
+    "development"
+  ]
+}

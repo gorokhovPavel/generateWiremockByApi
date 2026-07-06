@@ -1,0 +1,20 @@
+{
+  "timePeriod": {
+    "year": 2025
+  },
+  "user": "monalisa",
+  "usageItems": [
+    {
+      "product": "Actions",
+      "sku": "actions_linux",
+      "unitType": "minutes",
+      "pricePerUnit": 0.008,
+      "grossQuantity": 1000,
+      "grossAmount": 8,
+      "discountQuantity": 0,
+      "discountAmount": 0,
+      "netQuantity": 1000,
+      "netAmount": 8
+    }
+  ]
+}

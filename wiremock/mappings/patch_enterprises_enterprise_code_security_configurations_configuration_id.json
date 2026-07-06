@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPathPattern": "/enterprises/[^/]+/code-security/configurations/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "patch_enterprises_enterprise_code_security_configurations_configuration_id-response.json"
+  }
+}

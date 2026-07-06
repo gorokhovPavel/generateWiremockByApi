@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/orgs/[^/]+/dependabot/repository-access/default-level"
+  },
+  "response": {
+    "status": 204
+  }
+}

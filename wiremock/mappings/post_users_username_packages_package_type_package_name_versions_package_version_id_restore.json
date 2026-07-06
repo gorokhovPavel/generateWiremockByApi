@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/users/[^/]+/packages/[^/]+/[^/]+/versions/[^/]+/restore"
+  },
+  "response": {
+    "status": 204
+  }
+}

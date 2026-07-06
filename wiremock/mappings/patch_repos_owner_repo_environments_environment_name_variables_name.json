@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/environments/[^/]+/variables/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

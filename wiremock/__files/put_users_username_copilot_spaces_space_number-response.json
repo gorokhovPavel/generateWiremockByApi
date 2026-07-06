@@ -1,0 +1,70 @@
+{
+  "id": 42,
+  "number": 5,
+  "name": "My Development Space",
+  "description": "Personal space for React development patterns",
+  "general_instructions": "Focus on React functional components, hooks, and modern development patterns",
+  "owner": {
+    "login": "octocat",
+    "id": 1,
+    "node_id": "MDQ6VXNlcjE=",
+    "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/octocat",
+    "html_url": "https://github.com/octocat",
+    "followers_url": "https://api.github.com/users/octocat/followers",
+    "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+    "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+    "organizations_url": "https://api.github.com/users/octocat/orgs",
+    "repos_url": "https://api.github.com/users/octocat/repos",
+    "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/octocat/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "creator": {
+    "login": "octocat",
+    "id": 1,
+    "node_id": "MDQ6VXNlcjE=",
+    "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/octocat",
+    "html_url": "https://github.com/octocat",
+    "followers_url": "https://api.github.com/users/octocat/followers",
+    "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+    "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+    "organizations_url": "https://api.github.com/users/octocat/orgs",
+    "repos_url": "https://api.github.com/users/octocat/repos",
+    "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/octocat/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "created_at": "2023-02-15T08:30:00Z",
+  "updated_at": "2023-02-15T14:45:00Z",
+  "html_url": "https://github.com/copilot/spaces/octocat/5",
+  "api_url": "https://api.github.com/user/1/copilot-spaces/5",
+  "base_role": "no_access",
+  "resources_attributes": [
+    {
+      "id": 789,
+      "resource_type": "github_file",
+      "metadata": {
+        "repository_id": 1234,
+        "file_path": "src/components/App.tsx"
+      }
+    },
+    {
+      "id": 790,
+      "resource_type": "free_text",
+      "metadata": {
+        "name": "React Best Practices",
+        "text": "Use functional components with hooks"
+      }
+    }
+  ]
+}

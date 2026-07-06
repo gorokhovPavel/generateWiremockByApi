@@ -1,0 +1,19 @@
+{
+  "message": "Budget successfully updated.",
+  "budget": {
+    "id": "2066deda-923f-43f9-88d2-62395a28c0cdd",
+    "budget_type": "ProductPricing",
+    "budget_product_sku": "actions_linux",
+    "budget_scope": "repository",
+    "budget_entity_name": "org-name/example-repo-name",
+    "budget_amount": 10,
+    "prevent_further_usage": true,
+    "budget_alerting": {
+      "will_alert": true,
+      "alert_recipients": [
+        "mona",
+        "lisa"
+      ]
+    }
+  }
+}

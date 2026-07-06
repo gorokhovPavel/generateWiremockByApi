@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/enterprises/[^/]+/copilot/metrics/reports/enterprise-1-day"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_enterprises_enterprise_copilot_metrics_reports_enterprise_1_day-response.json"
+  }
+}

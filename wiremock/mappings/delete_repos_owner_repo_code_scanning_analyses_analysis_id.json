@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/code-scanning/analyses/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "delete_repos_owner_repo_code_scanning_analyses_analysis_id-response.json"
+  }
+}

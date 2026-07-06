@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/user/ssh_signing_keys/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

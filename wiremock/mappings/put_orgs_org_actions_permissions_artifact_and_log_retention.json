@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/orgs/[^/]+/actions/permissions/artifact-and-log-retention"
+  },
+  "response": {
+    "status": 204
+  }
+}

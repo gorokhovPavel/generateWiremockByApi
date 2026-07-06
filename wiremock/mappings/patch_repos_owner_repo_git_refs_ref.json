@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/git/refs/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "patch_repos_owner_repo_git_refs_ref-response.json"
+  }
+}

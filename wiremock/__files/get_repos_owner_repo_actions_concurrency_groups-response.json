@@ -1,0 +1,15 @@
+{
+  "total_count": 2,
+  "concurrency_groups": [
+    {
+      "group_name": "deploy-prod",
+      "group_url": "https://api.github.com/repos/octocat/Hello-World/actions/concurrency_groups/deploy-prod",
+      "last_acquired_at": "2026-01-15T16:14:23Z"
+    },
+    {
+      "group_name": "ci-build",
+      "group_url": "https://api.github.com/repos/octocat/Hello-World/actions/concurrency_groups/ci-build",
+      "last_acquired_at": "2026-01-15T16:13:55Z"
+    }
+  ]
+}

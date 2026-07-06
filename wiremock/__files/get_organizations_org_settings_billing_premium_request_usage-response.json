@@ -1,0 +1,21 @@
+{
+  "timePeriod": {
+    "year": 2025
+  },
+  "organization": "GitHub",
+  "usageItems": [
+    {
+      "product": "Copilot",
+      "sku": "Copilot Premium Request",
+      "model": "GPT-5",
+      "unitType": "requests",
+      "pricePerUnit": 0.04,
+      "grossQuantity": 100,
+      "grossAmount": 4,
+      "discountQuantity": 0,
+      "discountAmount": 0,
+      "netQuantity": 100,
+      "netAmount": 4
+    }
+  ]
+}

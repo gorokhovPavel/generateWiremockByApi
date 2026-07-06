@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/import"
+  },
+  "response": {
+    "status": 204
+  }
+}

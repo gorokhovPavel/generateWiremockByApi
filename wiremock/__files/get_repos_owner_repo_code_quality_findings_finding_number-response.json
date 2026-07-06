@@ -1,0 +1,25 @@
+{
+  "number": 42,
+  "state": "open",
+  "url": "https://api.github.com/repos/octocat/hello-world/code-quality/findings/42",
+  "rule": {
+    "id": "java/useless-null-check",
+    "title": "Useless null check",
+    "description": "Checking whether an expression is null when that expression cannot possibly be null is useless.",
+    "help": "# Useless null check\nSometimes you can guarantee that a particular variable will never be null. For example when that variable has just been assigned a newly created object or is the exception caught by a `catch` clause. A null check on such a variable is ...",
+    "severity": "warning",
+    "category": "maintainability"
+  },
+  "location": {
+    "path": "java/UselessNullCheck.java",
+    "start_line": 9,
+    "start_column": 4,
+    "end_line": 9,
+    "end_column": 18
+  },
+  "message": {
+    "text": "This check is useless. o cannot be null at this check, since it is guarded by instanceof.",
+    "markdown": "This check is useless. [o](java/UselessNullCheck.java#L9C4-L9C18) cannot be null at this check, since it is guarded by [...instanceof...](java/UselessNullCheck.java#L7C13-L7C25)."
+  },
+  "created_at": "2026-01-23T12:34:56Z"
+}

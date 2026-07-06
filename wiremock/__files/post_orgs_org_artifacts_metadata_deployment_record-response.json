@@ -1,0 +1,19 @@
+{
+  "total_count": 1,
+  "deployment_records": [
+    {
+      "id": 123,
+      "digest": "sha256:1bb1e949e55dcefc6353e7b36c8897d2a107d8e8dca49d4e3c0ea8493fc0bc72",
+      "logical_environment": "prod",
+      "physical_environment": "pacific-east",
+      "cluster": "moda-1",
+      "deployment_name": "prod-deployment",
+      "tags": {
+        "data": "sensitive"
+      },
+      "created": "2011-01-26T19:14:43Z",
+      "updated_at": "2011-01-26T19:14:43Z",
+      "attestation_id": 456
+    }
+  ]
+}

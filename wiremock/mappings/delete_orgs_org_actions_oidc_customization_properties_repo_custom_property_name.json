@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/orgs/[^/]+/actions/oidc/customization/properties/repo/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

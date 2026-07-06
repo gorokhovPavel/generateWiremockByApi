@@ -1,0 +1,156 @@
+[
+  {
+    "id": 12345,
+    "node_id": "PVTF_lADOABCD1234567890",
+    "name": "Priority",
+    "data_type": "single_select",
+    "project_url": "https://api.github.com/projects/67890",
+    "options": [
+      {
+        "id": "option_1",
+        "name": {
+          "html": "Low",
+          "raw": "Low"
+        },
+        "color": "GREEN",
+        "description": {
+          "html": "Low priority items",
+          "raw": "Low priority items"
+        }
+      },
+      {
+        "id": "option_2",
+        "name": {
+          "html": "Medium",
+          "raw": "Medium"
+        },
+        "color": "YELLOW",
+        "description": {
+          "html": "Medium priority items",
+          "raw": "Medium priority items"
+        }
+      },
+      {
+        "id": "option_3",
+        "name": {
+          "html": "High",
+          "raw": "High"
+        },
+        "color": "RED",
+        "description": {
+          "html": "High priority items",
+          "raw": "High priority items"
+        }
+      }
+    ],
+    "created_at": "2022-04-28T12:00:00Z",
+    "updated_at": "2022-04-28T12:00:00Z"
+  },
+  {
+    "id": 67891,
+    "node_id": "PVTF_lADOABCD9876543210",
+    "name": "Status",
+    "data_type": "single_select",
+    "project_url": "https://api.github.com/projects/67890",
+    "options": [
+      {
+        "id": "option_4",
+        "name": {
+          "html": "Todo",
+          "raw": "Todo"
+        },
+        "color": "GRAY",
+        "description": {
+          "html": "Items to be worked on",
+          "raw": "Items to be worked on"
+        }
+      },
+      {
+        "id": "option_5",
+        "name": {
+          "html": "In Progress",
+          "raw": "In Progress"
+        },
+        "color": "BLUE",
+        "description": {
+          "html": "Items currently being worked on",
+          "raw": "Items currently being worked on"
+        }
+      },
+      {
+        "id": "option_6",
+        "name": {
+          "html": "Done",
+          "raw": "Done"
+        },
+        "color": "GREEN",
+        "description": {
+          "html": "Completed items",
+          "raw": "Completed items"
+        }
+      }
+    ],
+    "created_at": "2022-04-29T10:30:00Z",
+    "updated_at": "2022-04-29T10:30:00Z"
+  },
+  {
+    "id": 24680,
+    "node_id": "PVTF_lADOABCD2468024680",
+    "name": "Team notes",
+    "data_type": "text",
+    "project_url": "https://api.github.com/projects/67890",
+    "created_at": "2022-05-15T08:00:00Z",
+    "updated_at": "2022-05-15T08:00:00Z"
+  },
+  {
+    "id": 13579,
+    "node_id": "PVTF_lADOABCD1357913579",
+    "name": "Story points",
+    "data_type": "number",
+    "project_url": "https://api.github.com/projects/67890",
+    "created_at": "2022-06-01T14:30:00Z",
+    "updated_at": "2022-06-01T14:30:00Z"
+  },
+  {
+    "id": 98765,
+    "node_id": "PVTF_lADOABCD9876598765",
+    "name": "Due date",
+    "data_type": "date",
+    "project_url": "https://api.github.com/projects/67890",
+    "created_at": "2022-06-10T09:15:00Z",
+    "updated_at": "2022-06-10T09:15:00Z"
+  },
+  {
+    "id": 11223,
+    "node_id": "PVTF_lADOABCD1122311223",
+    "name": "Sprint",
+    "data_type": "iteration",
+    "project_url": "https://api.github.com/projects/67890",
+    "configuration": {
+      "duration": 14,
+      "start_day": 1,
+      "iterations": [
+        {
+          "id": "iter_1",
+          "title": {
+            "html": "Sprint 1",
+            "raw": "Sprint 1"
+          },
+          "start_date": "2022-07-01",
+          "duration": 14
+        },
+        {
+          "id": "iter_2",
+          "title": {
+            "html": "Sprint 2",
+            "raw": "Sprint 2"
+          },
+          "start_date": "2022-07-15",
+          "duration": 14
+        }
+      ]
+    },
+    "created_at": "2022-06-20T16:45:00Z",
+    "updated_at": "2022-06-20T16:45:00Z"
+  }
+]

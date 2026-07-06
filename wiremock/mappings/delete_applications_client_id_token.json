@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/applications/[^/]+/token"
+  },
+  "response": {
+    "status": 204
+  }
+}

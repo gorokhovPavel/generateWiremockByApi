@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/orgs/[^/]+/members/[^/]+/codespaces/[^/]+"
+  },
+  "response": {
+    "status": 202,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "delete_orgs_org_members_username_codespaces_codespace_name-response.json"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/users/[^/]+/copilot-spaces/[^/]+/resources/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "put_users_username_copilot_spaces_space_number_resources_space_resource_id-response.json"
+  }
+}

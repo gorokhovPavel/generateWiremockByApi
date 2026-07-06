@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/enterprises/[^/]+/actions/cache/storage-limit"
+  },
+  "response": {
+    "status": 204
+  }
+}

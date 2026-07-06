@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/orgs/[^/]+/attestations/delete-request"
+  },
+  "response": {
+    "status": 200
+  }
+}

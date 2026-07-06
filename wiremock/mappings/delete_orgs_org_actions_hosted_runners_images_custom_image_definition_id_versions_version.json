@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/orgs/[^/]+/actions/hosted-runners/images/custom/[^/]+/versions/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

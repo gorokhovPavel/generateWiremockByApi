@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPathPattern": "/orgs/[^/]+/agents/variables/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

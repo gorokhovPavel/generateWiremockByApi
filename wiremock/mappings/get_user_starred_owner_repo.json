@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/user/starred/[^/]+/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/orgs/[^/]+/actions/runner-groups/[^/]+/runners/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

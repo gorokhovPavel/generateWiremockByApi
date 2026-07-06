@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/app/installations/[^/]+/suspended"
+  },
+  "response": {
+    "status": 204
+  }
+}

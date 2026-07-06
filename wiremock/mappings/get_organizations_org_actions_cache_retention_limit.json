@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/organizations/[^/]+/actions/cache/retention-limit"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_organizations_org_actions_cache_retention_limit-response.json"
+  }
+}

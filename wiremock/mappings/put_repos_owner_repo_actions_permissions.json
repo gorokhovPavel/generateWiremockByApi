@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/actions/permissions"
+  },
+  "response": {
+    "status": 204
+  }
+}

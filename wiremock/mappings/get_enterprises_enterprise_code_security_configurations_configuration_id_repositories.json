@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/enterprises/[^/]+/code-security/configurations/[^/]+/repositories"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_enterprises_enterprise_code_security_configurations_configuration_id_repositories-response.json"
+  }
+}

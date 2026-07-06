@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/actions/jobs/[^/]+/logs"
+  },
+  "response": {
+    "status": 302
+  }
+}

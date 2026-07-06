@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/dependency-graph/sbom/fetch-report/[^/]+"
+  },
+  "response": {
+    "status": 202
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/app/hook/deliveries/[^/]+/attempts"
+  },
+  "response": {
+    "status": 202,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_app_hook_deliveries_delivery_id_attempts-response.json"
+  }
+}

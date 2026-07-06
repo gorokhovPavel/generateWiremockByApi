@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/enterprises/[^/]+/code-security/configurations/[^/]+/attach"
+  },
+  "response": {
+    "status": 202,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_enterprises_enterprise_code_security_configurations_configuration_id_attach-response.json"
+  }
+}

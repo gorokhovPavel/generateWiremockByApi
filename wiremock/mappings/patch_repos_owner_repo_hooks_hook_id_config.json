@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/hooks/[^/]+/config"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "patch_repos_owner_repo_hooks_hook_id_config-response.json"
+  }
+}

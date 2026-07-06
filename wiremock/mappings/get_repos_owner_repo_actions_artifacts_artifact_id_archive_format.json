@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/actions/artifacts/[^/]+/[^/]+"
+  },
+  "response": {
+    "status": 302
+  }
+}

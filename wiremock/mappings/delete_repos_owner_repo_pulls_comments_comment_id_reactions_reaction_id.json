@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/pulls/comments/[^/]+/reactions/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

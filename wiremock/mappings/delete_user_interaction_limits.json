@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPath": "/user/interaction-limits"
+  },
+  "response": {
+    "status": 204
+  }
+}

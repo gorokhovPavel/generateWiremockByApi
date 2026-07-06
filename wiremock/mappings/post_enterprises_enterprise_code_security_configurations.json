@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/enterprises/[^/]+/code-security/configurations"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_enterprises_enterprise_code_security_configurations-response.json"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/actions/workflows/[^/]+/disable"
+  },
+  "response": {
+    "status": 204
+  }
+}

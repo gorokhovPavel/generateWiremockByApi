@@ -1,0 +1,4 @@
+{
+  "next_analysis_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/41",
+  "confirm_delete_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/41?confirm_delete"
+}

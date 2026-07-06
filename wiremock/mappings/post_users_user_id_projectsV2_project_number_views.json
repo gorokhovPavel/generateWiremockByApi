@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/users/[^/]+/projectsV2/[^/]+/views"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_users_user_id_projectsV2_project_number_views-response.json"
+  }
+}

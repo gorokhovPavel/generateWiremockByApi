@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/orgs/[^/]+/actions/variables/[^/]+/repositories/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

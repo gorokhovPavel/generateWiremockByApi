@@ -1,0 +1,10 @@
+[
+  {
+    "custom_property_name": "environment",
+    "inclusion_source": "enterprise"
+  },
+  {
+    "custom_property_name": "team",
+    "inclusion_source": "enterprise"
+  }
+]

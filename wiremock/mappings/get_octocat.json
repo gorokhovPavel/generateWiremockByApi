@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/octocat"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/octocat-stream"
+    },
+    "bodyFileName": "get_octocat-response.json"
+  }
+}

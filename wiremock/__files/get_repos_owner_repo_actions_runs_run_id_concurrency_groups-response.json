@@ -1,0 +1,39 @@
+{
+  "total_count": 2,
+  "concurrency_groups": [
+    {
+      "group_name": "deploy-prod",
+      "group_url": "https://api.github.com/repos/octocat/Hello-World/actions/concurrency_groups/deploy-prod",
+      "group_members": [
+        {
+          "run_id": 30433642,
+          "run_name": "Deploy to production",
+          "run_url": "https://api.github.com/repos/octocat/Hello-World/actions/runs/30433642",
+          "run_html_url": "https://github.com/octocat/Hello-World/actions/runs/30433642",
+          "status": "in_progress",
+          "position": 0,
+          "position_url": "https://api.github.com/repos/octocat/Hello-World/actions/concurrency_groups/deploy-prod?ahead_of_run=30433642"
+        }
+      ]
+    },
+    {
+      "group_name": "ci-build",
+      "group_url": "https://api.github.com/repos/octocat/Hello-World/actions/concurrency_groups/ci-build",
+      "group_members": [
+        {
+          "run_id": 30433642,
+          "run_name": "Deploy to production",
+          "run_url": "https://api.github.com/repos/octocat/Hello-World/actions/runs/30433642",
+          "run_html_url": "https://github.com/octocat/Hello-World/actions/runs/30433642",
+          "status": "pending",
+          "position": 2,
+          "position_url": "https://api.github.com/repos/octocat/Hello-World/actions/concurrency_groups/ci-build?ahead_of_job=798245260",
+          "job_id": 798245260,
+          "job_name": "build",
+          "job_url": "https://api.github.com/repos/octocat/Hello-World/actions/jobs/798245260",
+          "job_html_url": "https://github.com/octocat/Hello-World/actions/runs/30433642/job/798245260"
+        }
+      ]
+    }
+  ]
+}

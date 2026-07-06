@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/user/migrations/[^/]+/archive"
+  },
+  "response": {
+    "status": 302
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/organizations/[^/]+/settings/billing/premium_request/usage"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_organizations_org_settings_billing_premium_request_usage-response.json"
+  }
+}

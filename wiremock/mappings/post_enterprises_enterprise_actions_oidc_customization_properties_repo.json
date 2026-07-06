@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/enterprises/[^/]+/actions/oidc/customization/properties/repo"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "post_enterprises_enterprise_actions_oidc_customization_properties_repo-response.json"
+  }
+}

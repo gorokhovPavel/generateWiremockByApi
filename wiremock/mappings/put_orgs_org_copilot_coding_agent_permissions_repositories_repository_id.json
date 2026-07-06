@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/orgs/[^/]+/copilot/coding-agent/permissions/repositories/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

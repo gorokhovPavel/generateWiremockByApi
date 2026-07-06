@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/code-scanning/codeql/variant-analyses/[^/]+/repos/[^/]+/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_repos_owner_repo_code_scanning_codeql_variant_analyses_codeql_variant_analysis_id_repos_repo_owner_repo_name-response.json"
+  }
+}

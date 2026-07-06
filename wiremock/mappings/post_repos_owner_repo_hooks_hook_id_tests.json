@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/hooks/[^/]+/tests"
+  },
+  "response": {
+    "status": 204
+  }
+}

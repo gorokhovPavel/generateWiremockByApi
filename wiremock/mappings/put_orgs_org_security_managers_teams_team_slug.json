@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/orgs/[^/]+/security-managers/teams/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

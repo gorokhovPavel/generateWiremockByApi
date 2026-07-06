@@ -1,0 +1,38 @@
+{
+  "id": 512,
+  "node_id": "IF_kwDNAd3NAZr",
+  "name": "Priority",
+  "description": "Level of importance for the issue",
+  "data_type": "single_select",
+  "options": [
+    {
+      "id": 1,
+      "name": "High",
+      "description": "High priority",
+      "color": "red",
+      "priority": 1,
+      "created_at": "2025-01-15T10:30:15Z",
+      "updated_at": "2025-01-15T10:30:15Z"
+    },
+    {
+      "id": 2,
+      "name": "Medium",
+      "description": "Medium priority",
+      "color": "yellow",
+      "priority": 2,
+      "created_at": "2025-01-15T10:30:15Z",
+      "updated_at": "2025-01-15T10:30:15Z"
+    },
+    {
+      "id": 3,
+      "name": "Low",
+      "description": "Low priority",
+      "color": "green",
+      "priority": 3,
+      "created_at": "2025-01-15T10:30:15Z",
+      "updated_at": "2025-01-15T10:30:15Z"
+    }
+  ],
+  "created_at": "2025-01-15T10:30:15Z",
+  "updated_at": "2025-01-15T10:30:15Z"
+}

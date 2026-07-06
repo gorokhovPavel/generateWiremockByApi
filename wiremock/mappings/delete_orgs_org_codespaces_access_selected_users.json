@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/orgs/[^/]+/codespaces/access/selected_users"
+  },
+  "response": {
+    "status": 204
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/orgs/[^/]+/packages/[^/]+/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

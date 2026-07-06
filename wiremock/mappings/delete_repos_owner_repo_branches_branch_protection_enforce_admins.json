@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/branches/[^/]+/protection/enforce_admins"
+  },
+  "response": {
+    "status": 204
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/immutable-releases"
+  },
+  "response": {
+    "status": 204
+  }
+}

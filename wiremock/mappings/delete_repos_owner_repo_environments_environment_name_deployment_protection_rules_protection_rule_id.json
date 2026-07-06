@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/environments/[^/]+/deployment_protection_rules/[^/]+"
+  },
+  "response": {
+    "status": 204
+  }
+}

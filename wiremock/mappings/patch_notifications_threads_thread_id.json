@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPathPattern": "/notifications/threads/[^/]+"
+  },
+  "response": {
+    "status": 205
+  }
+}

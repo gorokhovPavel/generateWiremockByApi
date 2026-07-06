@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/repos/[^/]+/[^/]+/issues/[^/]+/dependencies/blocked_by/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "delete_repos_owner_repo_issues_issue_number_dependencies_blocked_by_issue_id-response.json"
+  }
+}

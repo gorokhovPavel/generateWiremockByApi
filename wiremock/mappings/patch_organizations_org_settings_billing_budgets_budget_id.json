@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPathPattern": "/organizations/[^/]+/settings/billing/budgets/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "patch_organizations_org_settings_billing_budgets_budget_id-response.json"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "enabled_repositories": "selected",
+  "selected_repositories_url": "http://api.github.localhost/organizations/1/actions/permissions/self-hosted-runners/repositories"
+}

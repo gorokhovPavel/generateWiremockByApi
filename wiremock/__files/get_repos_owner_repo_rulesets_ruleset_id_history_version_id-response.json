@@ -1,0 +1,43 @@
+{
+  "version_id": 3,
+  "actor": {
+    "id": 1,
+    "type": "User"
+  },
+  "updated_at": "2024-10-23T16:29:47Z",
+  "state": {
+    "id": 42,
+    "name": "super cool ruleset",
+    "target": "branch",
+    "source_type": "Repository",
+    "source": "monalisa/my-repo",
+    "enforcement": "active",
+    "bypass_actors": [
+      {
+        "actor_id": 234,
+        "actor_type": "Team",
+        "bypass_mode": "always"
+      }
+    ],
+    "conditions": {
+      "ref_name": {
+        "include": [
+          "refs/heads/main",
+          "refs/heads/master"
+        ],
+        "exclude": [
+          "refs/heads/dev*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "commit_author_email_pattern",
+        "parameters": {
+          "operator": "contains",
+          "pattern": "github"
+        }
+      }
+    ]
+  }
+}

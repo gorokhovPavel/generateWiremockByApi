@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/users/[^/]+/attestations/digest/[^/]+"
+  },
+  "response": {
+    "status": 200
+  }
+}

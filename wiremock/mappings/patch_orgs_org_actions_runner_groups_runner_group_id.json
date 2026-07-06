@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPathPattern": "/orgs/[^/]+/actions/runner-groups/[^/]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "patch_orgs_org_actions_runner_groups_runner_group_id-response.json"
+  }
+}

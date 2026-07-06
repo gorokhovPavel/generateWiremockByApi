@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/organizations/[^/]+/actions/cache/storage-limit"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "get_organizations_org_actions_cache_storage_limit-response.json"
+  }
+}

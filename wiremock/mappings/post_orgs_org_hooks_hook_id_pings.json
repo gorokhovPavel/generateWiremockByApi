@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/orgs/[^/]+/hooks/[^/]+/pings"
+  },
+  "response": {
+    "status": 204
+  }
+}
