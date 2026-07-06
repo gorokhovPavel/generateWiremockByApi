@@ -7,17 +7,17 @@
  *   node generate-wiremock.js [директория-со-schema.yaml] [папка-вывода]
  *
  * По умолчанию:
- *   директория схемы: текущая рабочая директория (там ищется файл schema.yaml)
- *   вывод:            <директория-схемы>/wiremock  (mappings + __files)
+ *   директория схемы: папка самого скрипта (там же лежит schema.yaml)
+ *   вывод:            та же папка (mappings/ и __files/ рядом со скриптом)
  */
 
 const path = require('path');
 const fs = require('fs-extra');
 const SwaggerParser = require('@apidevtools/swagger-parser');
 
-const SCHEMA_DIR = path.resolve(process.argv[2] || process.cwd());
+const SCHEMA_DIR = path.resolve(process.argv[2] || __dirname);
 const SCHEMA_PATH = path.join(SCHEMA_DIR, 'schema.yaml');
-const OUTPUT_DIR = path.resolve(process.argv[3] || path.join(SCHEMA_DIR, 'wiremock'));
+const OUTPUT_DIR = path.resolve(process.argv[3] || SCHEMA_DIR);
 const MAPPINGS_DIR = path.join(OUTPUT_DIR, 'mappings');
 const FILES_DIR = path.join(OUTPUT_DIR, '__files');
 
