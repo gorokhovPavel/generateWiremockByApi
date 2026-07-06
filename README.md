@@ -21,20 +21,24 @@ your-project/
 
 ### 2. Установить зависимости
 
-Если в проекте ещё нет нужных пакетов — установите их:
+Если в проекте ещё нет нужных пакетов — выполните в корне проекта:
 
 ```bash
-npm install --save-dev @apidevtools/swagger-parser fs-extra
+npm install @apidevtools/swagger-parser fs-extra
 ```
 
 ### 3. Добавить npm-скрипт (опционально)
 
-В `package.json`:
+Выполните в корне проекта:
+
+```bash
+npm pkg set scripts.wiremock:generate="node wiremock/generate-wiremock.js"
+```
+
+Или вручную добавьте в `package.json` в блок `"scripts"`:
 
 ```json
-"scripts": {
-  "wiremock:generate": "node wiremock/generate-wiremock.js"
-}
+"wiremock:generate": "node wiremock/generate-wiremock.js"
 ```
 
 ### 4. Подготовить схему
