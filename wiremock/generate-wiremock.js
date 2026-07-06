@@ -103,9 +103,9 @@ async function main() {
         continue;
       }
 
-      // Существующий эндпоинт — обновляем маппинг, в теле ответа только добавляем новые поля
+      // Существующий эндпоинт — сравниваем семантически, пишем только то что реально изменилось
       const existingMapping = fs.readJsonSync(path.join(MAPPINGS_DIR, `${slug}.json`));
-      const mappingChanged = JSON.stringify(existingMapping) !== JSON.stringify(newMapping);
+      const mappingChanged = !isMappingEqual(existingMapping, newMapping);
 
       let mergedBody;
       let bodyChanged = false;
@@ -121,11 +121,17 @@ async function main() {
         }
       }
 
-      if (mappingChanged || bodyChanged) {
-        if (mergedBody !== undefined) fs.writeJsonSync(path.join(FILES_DIR, responseFileName), mergedBody, { spaces: 2 });
+      if (mappingChanged) {
         fs.writeJsonSync(path.join(MAPPINGS_DIR, `${slug}.json`), newMapping, { spaces: 2 });
+      }
+      if (bodyChanged && mergedBody !== undefined) {
+        fs.writeJsonSync(path.join(FILES_DIR, responseFileName), mergedBody, { spaces: 2 });
+      }
+
+      if (mappingChanged || bodyChanged) {
+        const what = [mappingChanged && 'mapping', bodyChanged && 'body'].filter(Boolean).join('+');
         updated++;
-        console.log(`  ~ ${slug}`);
+        console.log(`  ~ ${slug} [${what}]`);
       } else {
         unchanged++;
       }
@@ -415,6 +421,26 @@ function deepMergePreferExisting(newVal, existingVal) {
 
 function isPlainObject(v) {
   return v !== null && typeof v === 'object' && !Array.isArray(v);
+}
+
+/**
+ * Семантическое сравнение двух маппингов — только значимые поля,
+ * порядок ключей в JSON-файле не влияет на результат.
+ */
+function isMappingEqual(existing, generated) {
+  const er = existing.request || {};
+  const gr = generated.request || {};
+  const eresp = existing.response || {};
+  const gresp = generated.response || {};
+
+  return (
+    er.method === gr.method &&
+    (er.urlPath ?? null) === (gr.urlPath ?? null) &&
+    (er.urlPathPattern ?? null) === (gr.urlPathPattern ?? null) &&
+    eresp.status === gresp.status &&
+    (eresp.headers?.['Content-Type'] ?? null) === (gresp.headers?.['Content-Type'] ?? null) &&
+    (eresp.bodyFileName ?? null) === (gresp.bodyFileName ?? null)
+  );
 }
 
 /** Превращает "/repos/{owner}/{repo}" + "get" в "get_repos_owner_repo". */
