@@ -40,22 +40,30 @@ async function main() {
   }
 
   console.log(`Читаю и разрешаю $ref в схеме: ${SCHEMA_PATH}`);
-
-  // dereference() полностью раскрывает все $ref (включая components/schemas,
-  // components/examples и т.д.), поэтому дальше по коду мы работаем с обычными
-  // JS-объектами, как будто $ref никогда не было.
-  // circular: 'ignore' — не падать на циклических схемах (типичны в больших API);
-  // от зацикливания при генерации мока защищаемся сами (см. generateMock).
   const api = await SwaggerParser.dereference(SCHEMA_PATH, {
     dereference: { circular: 'ignore' },
   });
 
-  fs.emptyDirSync(MAPPINGS_DIR);
-  fs.emptyDirSync(FILES_DIR);
+  fs.ensureDirSync(MAPPINGS_DIR);
+  fs.ensureDirSync(FILES_DIR);
+
+  const existingSlugs = new Set(
+    fs.readdirSync(MAPPINGS_DIR)
+      .filter((f) => f.endsWith('.json'))
+      .map((f) => f.slice(0, -5))
+  );
+
+  const isIncremental = existingSlugs.size > 0;
+  if (isIncremental) {
+    console.log(`Найдено ${existingSlugs.size} существующих маппингов — выполняю инкрементальное обновление...`);
+  } else {
+    fs.emptyDirSync(MAPPINGS_DIR);
+    fs.emptyDirSync(FILES_DIR);
+  }
 
   const usedSlugs = new Set();
-  let mappingCount = 0;
-  let noBodyCount = 0;
+  const processedSlugs = new Set();
+  let added = 0, updated = 0, removed = 0, unchanged = 0, noBodyCount = 0;
 
   for (const [routePath, pathItem] of Object.entries(api.paths || {})) {
     for (const method of HTTP_METHODS) {
@@ -63,35 +71,83 @@ async function main() {
       if (!operation) continue;
 
       const slug = uniqueSlug(slugify(routePath, method), usedSlugs);
-      const { status, contentType, bodySchema, bodyExample } = resolveResponse(operation);
+      processedSlugs.add(slug);
 
-      const mapping = {
-        request: buildRequest(method, routePath),
-        response: { status },
-      };
+      const { status, contentType, bodySchema, bodyExample } = resolveResponse(operation);
+      const responseFileName = `${slug}-response.json`;
+
+      const newMapping = { request: buildRequest(method, routePath), response: { status } };
+      let newBody;
 
       if (contentType) {
-        const body = bodyExample !== undefined ? bodyExample : generateMock(bodySchema, new Set(), 0);
-        const responseFileName = `${slug}-response.json`;
-        fs.writeJsonSync(path.join(FILES_DIR, responseFileName), body, { spaces: 2 });
-        mapping.response.headers = { 'Content-Type': contentType };
-        mapping.response.bodyFileName = responseFileName;
+        newBody = bodyExample !== undefined ? bodyExample : generateMock(bodySchema, new Set(), 0);
+        newMapping.response.headers = { 'Content-Type': contentType };
+        newMapping.response.bodyFileName = responseFileName;
       } else {
         noBodyCount++;
       }
 
-      fs.writeJsonSync(path.join(MAPPINGS_DIR, `${slug}.json`), mapping, { spaces: 2 });
-      mappingCount++;
+      if (!isIncremental) {
+        if (newBody !== undefined) fs.writeJsonSync(path.join(FILES_DIR, responseFileName), newBody, { spaces: 2 });
+        fs.writeJsonSync(path.join(MAPPINGS_DIR, `${slug}.json`), newMapping, { spaces: 2 });
+        added++;
+        if (added % 200 === 0) console.log(`  ...обработано ${added} эндпоинтов`);
+        continue;
+      }
 
-      if (mappingCount % 200 === 0) {
-        console.log(`  ...обработано ${mappingCount} эндпоинтов`);
+      if (!existingSlugs.has(slug)) {
+        if (newBody !== undefined) fs.writeJsonSync(path.join(FILES_DIR, responseFileName), newBody, { spaces: 2 });
+        fs.writeJsonSync(path.join(MAPPINGS_DIR, `${slug}.json`), newMapping, { spaces: 2 });
+        added++;
+        console.log(`  + ${slug}`);
+        continue;
+      }
+
+      // Существующий эндпоинт — сравниваем с тем, что сгенерировано сейчас
+      const existingMapping = fs.readJsonSync(path.join(MAPPINGS_DIR, `${slug}.json`));
+      const mappingChanged = JSON.stringify(existingMapping) !== JSON.stringify(newMapping);
+
+      let bodyChanged = false;
+      if (newBody !== undefined) {
+        const bodyFilePath = path.join(FILES_DIR, responseFileName);
+        if (!fs.existsSync(bodyFilePath)) {
+          bodyChanged = true;
+        } else {
+          bodyChanged = JSON.stringify(fs.readJsonSync(bodyFilePath)) !== JSON.stringify(newBody);
+        }
+      }
+
+      if (mappingChanged || bodyChanged) {
+        if (newBody !== undefined) fs.writeJsonSync(path.join(FILES_DIR, responseFileName), newBody, { spaces: 2 });
+        fs.writeJsonSync(path.join(MAPPINGS_DIR, `${slug}.json`), newMapping, { spaces: 2 });
+        updated++;
+        console.log(`  ~ ${slug}`);
+      } else {
+        unchanged++;
       }
     }
   }
 
-  console.log(`Готово: ${mappingCount} mapping(ов) -> ${MAPPINGS_DIR}`);
-  console.log(`Из них без тела ответа (например, 204): ${noBodyCount}`);
-  console.log(`Файлы с телами ответов -> ${FILES_DIR}`);
+  // Удаляем маппинги для эндпоинтов, которых больше нет в схеме
+  if (isIncremental) {
+    for (const slug of existingSlugs) {
+      if (!processedSlugs.has(slug)) {
+        fs.removeSync(path.join(MAPPINGS_DIR, `${slug}.json`));
+        const bodyFile = path.join(FILES_DIR, `${slug}-response.json`);
+        if (fs.existsSync(bodyFile)) fs.removeSync(bodyFile);
+        removed++;
+        console.log(`  - ${slug}`);
+      }
+    }
+  }
+
+  if (!isIncremental) {
+    console.log(`\nГотово: ${added} mapping(ов) -> ${MAPPINGS_DIR}`);
+    console.log(`Из них без тела ответа (например, 204): ${noBodyCount}`);
+  } else {
+    console.log(`\nГотово: добавлено ${added}, обновлено ${updated}, без изменений ${unchanged}, удалено ${removed}`);
+  }
+  console.log(`Папки: ${MAPPINGS_DIR}`);
 }
 
 /**
