@@ -188,12 +188,16 @@ async function main() {
     ? ['CHANGELOG.md']
     : ['CHANGELOG.md', 'package.json', 'package-lock.json'];
 
+  const versionNote = skipVersionBump
+    ? '(версия package.json не изменена)'
+    : `→ версия ${newVersion}`;
+
   if (doCommit) {
     execSync(`git add ${changedFiles.join(' ')}`);
     execSync(`git commit -m "chore: update changelog [${newVersion}]"`);
-    console.log(`\n✓ ${changedFiles.join(', ')} обновлены и закоммичены → версия ${newVersion}\n`);
+    console.log(`\n✓ ${changedFiles.join(', ')} обновлены и закоммичены ${versionNote}\n`);
   } else {
-    console.log(`\n✓ ${changedFiles.join(', ')} обновлены → версия ${newVersion}`);
+    console.log(`\n✓ ${changedFiles.join(', ')} обновлены ${versionNote}`);
     console.log('  Изменения не закоммичены — добавьте их в свой коммит вручную.\n');
   }
 }
