@@ -140,10 +140,9 @@ async function main() {
   const descriptions = [firstDesc];
 
   while (true) {
-    const more = await ask(rl, 'Добавить ещё одно описание? (y / Enter — пропустить): ');
-    if (more.toLowerCase() !== 'y') break;
-    const extra = await ask(rl, 'Описание: ');
-    if (extra) descriptions.push(extra);
+    const extra = await ask(rl, 'Ещё одно описание? (Enter — пропустить): ');
+    if (!extra) break;
+    descriptions.push(extra);
   }
 
   const doCommit = await ask(rl, '\nСделать коммит сразу? (y/n) [y]: ');
