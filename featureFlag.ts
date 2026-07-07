@@ -18,6 +18,7 @@ declare global {
 }
 
 const getLocalOverrides = (): Partial<FeatureFlags> => {
+  if (IS_PROD || IS_PREPROD) return {};
   try {
     const raw = localStorage.getItem('FF_OVERRIDE');
     return raw ? (JSON.parse(raw) as Partial<FeatureFlags>) : {};
