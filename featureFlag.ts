@@ -17,8 +17,10 @@ declare global {
   }
 }
 
+export const isRestrictedEnv: boolean = IS_PROD || IS_PREPROD;
+
 const getLocalOverrides = (): Partial<FeatureFlags> => {
-  if (IS_PROD || IS_PREPROD) return {};
+  if (isRestrictedEnv) return {};
   try {
     const raw = localStorage.getItem('FF_OVERRIDE');
     return raw ? (JSON.parse(raw) as Partial<FeatureFlags>) : {};
@@ -100,7 +102,7 @@ export const enableDevTools = (): void => {
   window.FF_OVERRIDE = flagControls as Window['FF_OVERRIDE'];
 };
 
-if (typeof window !== 'undefined' && !IS_PROD && !IS_PREPROD) {
+if (typeof window !== 'undefined' && !isRestrictedEnv) {
   logFeatureFlags(features);
   enableDevTools();
 }
