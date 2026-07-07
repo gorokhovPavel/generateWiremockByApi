@@ -52,7 +52,7 @@ if (typeof window !== 'undefined') {
   const row = (flag: string, val: string) =>
     `│ ${flag.padEnd(colFlag)} │ ${val.padEnd(colVal)} │`;
 
-  const ON  = 'color:#166534;background:#dcfce7;padding:1px 0';
+  const ON  = 'color:#4a8c6a;background:#f2fdf6;padding:1px 0';
   const OFF = 'color:#c0706e;background:#fff4f4;padding:1px 0';
 
   const parts: string[] = ['%c' + divider('┌', '┬', '┐') + '\n'];
