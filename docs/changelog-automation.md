@@ -8,11 +8,17 @@
 
 ## Установка (один раз на проект)
 
+**macOS / Linux**
 ```bash
 npm run changelog:install
 ```
 
-Команда создаёт `.git/hooks/pre-push` и выставляет права на выполнение.  
+**Windows** (требуется [Git for Windows](https://git-scm.com/download/win))
+```bash
+npm run changelog:install-win
+```
+
+Команда создаёт `.git/hooks/pre-push`.  
 Нужно запустить каждому разработчику после клонирования репозитория.
 
 ## Использование
@@ -55,8 +61,9 @@ npm run changelog
 
 ```
 scripts/
-  changelog.mjs        — интерактивный скрипт обновления CHANGELOG
-  install-hooks.mjs    — установка git-хука pre-push
+  changelog.mjs          — интерактивный скрипт обновления CHANGELOG
+  install-hooks.mjs      — установка git-хука pre-push (macOS / Linux)
+  install-hooks-win.mjs  — установка git-хука pre-push (Windows)
 ```
 
 ## Формат записи в CHANGELOG.md
