@@ -29,3 +29,27 @@ const getFeatureFlags = (): FeatureFlags => {
 }
 
 export const features = getFeatureFlags();
+
+(function logFeatureFlags() {
+  const overrides = getLocalOverrides();
+
+  console.log(
+    '%c 🚩 Feature Flags ',
+    'background:#6366f1;color:#fff;font-weight:bold;font-size:13px;padding:3px 10px;border-radius:4px;',
+  );
+
+  const table = (Object.keys(flagsConfig) as FeatureFlagName[]).reduce<
+    Record<string, { default: boolean; override: string; active: boolean; source: string }>
+  >((acc, flag) => {
+    const hasOverride = flag in overrides;
+    acc[flag] = {
+      default:  flagsConfig[flag],
+      override: hasOverride ? String(overrides[flag]) : '—',
+      active:   features[flag],
+      source:   hasOverride ? '⚙️ localStorage' : '📄 featureFlag.json',
+    };
+    return acc;
+  }, {});
+
+  console.table(table);
+})();
