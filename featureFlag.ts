@@ -3,26 +3,22 @@ import flagsConfig from './featureFlag.json';
 type FeatureFlagName = keyof typeof flagsConfig;
 type FeatureFlags = Record<FeatureFlagName, boolean>;
 
-// Извлекает часть после последнего __ : "06_07__140622__ADD_NEW_API" → "ADD_NEW_API"
-type ShortName<T extends string> = T extends `${string}__${infer R}` ? ShortName<R> : T;
-
 type FlagControl = {
   on: () => void;
   off: () => void;
 };
 
-declare global {
-  interface Window {
-    FF_OVERRIDE: { [K in FeatureFlagName as ShortName<K>]: FlagControl };
-  }
-}
+export const FF_OVERRIDE_KEY = 'FF_OVERRIDE' as const;
+
+const STYLE_FLAG_ENABLED  = 'color:#4a8c6a;background:#f2fdf6;padding:1px 0';
+const STYLE_FLAG_DISABLED = 'color:#c0706e;background:#fff4f4;padding:1px 0';
 
 export const isRestrictedEnv: boolean = IS_PROD || IS_PREPROD;
 
 const getLocalOverrides = (): Partial<FeatureFlags> => {
   if (isRestrictedEnv) return {};
   try {
-    const raw = localStorage.getItem('FF_OVERRIDE');
+    const raw = localStorage.getItem(FF_OVERRIDE_KEY);
     return raw ? (JSON.parse(raw) as Partial<FeatureFlags>) : {};
   } catch (error) {
     console.error('Error parsing feature flag overrides:', error);
@@ -54,15 +50,12 @@ export const logFeatureFlags = (flags: Record<string, boolean>): void => {
   const row = (flag: string, val: string) =>
     `│ ${flag.padEnd(colFlag)} │ ${val.padEnd(colVal)} │`;
 
-  const ON  = 'color:#4a8c6a;background:#f2fdf6;padding:1px 0';
-  const OFF = 'color:#c0706e;background:#fff4f4;padding:1px 0';
-
   const parts: string[] = ['%c' + divider('┌', '┬', '┐') + '\n'];
   const styles: string[] = [''];
   keys.forEach((f) => {
     const val = flags[f];
     parts.push('%c' + row(f, String(val)) + '\n');
-    styles.push(val ? ON : OFF);
+    styles.push(val ? STYLE_FLAG_ENABLED : STYLE_FLAG_DISABLED);
   });
   parts.push('%c' + divider('└', '┴', '┘'));
   styles.push('');
@@ -79,7 +72,7 @@ export const enableDevTools = (): void => {
   };
 
   const saveAndReload = (overrides: Partial<FeatureFlags>) => {
-    localStorage.setItem('FF_OVERRIDE', JSON.stringify(overrides));
+    localStorage.setItem(FF_OVERRIDE_KEY, JSON.stringify(overrides));
     window.location.reload();
   };
 
@@ -99,7 +92,7 @@ export const enableDevTools = (): void => {
     return acc;
   }, {} as Record<string, FlagControl>);
 
-  window.FF_OVERRIDE = flagControls as Window['FF_OVERRIDE'];
+  window[FF_OVERRIDE_KEY] = flagControls;
 };
 
 if (typeof window !== 'undefined' && !isRestrictedEnv) {
