@@ -30,7 +30,7 @@ const getFeatureFlags = (): FeatureFlags => {
 
 export const features = getFeatureFlags();
 
-(function logFeatureFlags() {
+if (typeof window !== 'undefined') {
   const overrides = getLocalOverrides();
 
   console.log(
@@ -52,4 +52,4 @@ export const features = getFeatureFlags();
   }, {});
 
   console.table(table);
-})();
+}
