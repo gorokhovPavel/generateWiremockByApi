@@ -42,10 +42,9 @@ const getFeatureFlags = (): FeatureFlags => {
 
 export const features = getFeatureFlags();
 
-if (typeof window !== 'undefined') {
-  // --- console table ---
-  const flags = Object.keys(flagsConfig) as FeatureFlagName[];
-  const colFlag = Math.max(...flags.map((f) => f.length));
+export const logFeatureFlags = (flags: Record<string, boolean>): void => {
+  const keys = Object.keys(flags);
+  const colFlag = Math.max(...keys.map((f) => f.length));
   const colVal  = 'false'.length;
   const divider = (l: string, m: string, r: string) =>
     l + '─'.repeat(colFlag + 2) + m + '─'.repeat(colVal + 2) + r;
@@ -57,8 +56,8 @@ if (typeof window !== 'undefined') {
 
   const parts: string[] = ['%c' + divider('┌', '┬', '┐') + '\n'];
   const styles: string[] = [''];
-  flags.forEach((f) => {
-    const val = features[f];
+  keys.forEach((f) => {
+    const val = flags[f];
     parts.push('%c' + row(f, String(val)) + '\n');
     styles.push(val ? ON : OFF);
   });
@@ -66,6 +65,10 @@ if (typeof window !== 'undefined') {
   styles.push('');
 
   console.log('🚩 Feature Flags\n' + parts.join(''), ...styles);
+};
+
+if (typeof window !== 'undefined') {
+  logFeatureFlags(features);
 
   // --- window.FF_OVERRIDE ---
   const shortName = (flag: string): string => {
@@ -78,7 +81,7 @@ if (typeof window !== 'undefined') {
     window.location.reload();
   };
 
-  const flagControls = flags.reduce((acc, flag) => {
+  const flagControls = (Object.keys(flagsConfig) as FeatureFlagName[]).reduce((acc: Record<string, FlagControl>, flag) => {
     acc[shortName(flag)] = {
       on: () => {
         const overrides = getLocalOverrides();
