@@ -67,10 +67,9 @@ export const logFeatureFlags = (flags: Record<string, boolean>): void => {
   console.log('🚩 Feature Flags\n' + parts.join(''), ...styles);
 };
 
-if (typeof window !== 'undefined') {
-  logFeatureFlags(features);
+export const enableDevTools = (): void => {
+  if (typeof window === 'undefined') return;
 
-  // --- window.FF_OVERRIDE ---
   const shortName = (flag: string): string => {
     const parts = flag.split('__');
     return parts[parts.length - 1];
@@ -98,4 +97,8 @@ if (typeof window !== 'undefined') {
   }, {} as Record<string, FlagControl>);
 
   window.FF_OVERRIDE = flagControls as Window['FF_OVERRIDE'];
+};
+
+if (typeof window !== 'undefined') {
+  logFeatureFlags(features);
 }
