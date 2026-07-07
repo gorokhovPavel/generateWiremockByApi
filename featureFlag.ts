@@ -99,6 +99,7 @@ export const enableDevTools = (): void => {
   window.FF_OVERRIDE = flagControls as Window['FF_OVERRIDE'];
 };
 
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && !IS_PROD && !IS_PREPROD) {
   logFeatureFlags(features);
+  enableDevTools();
 }
