@@ -10,9 +10,15 @@ const CATEGORIES = [
   'Изменено',
   'Исправлено',
   'Удалено',
+  'Общее',
 ];
 
-const BUMP_TYPES = ['patch', 'minor', 'major'];
+const BUMP_OPTIONS = [
+  { label: 'patch',         type: 'patch' },
+  { label: 'minor',         type: 'minor' },
+  { label: 'major',         type: 'major' },
+  { label: 'не обновляем', type: null    },
+];
 
 // --- helpers ---
 
@@ -62,13 +68,13 @@ function recentCommits() {
   }
 }
 
-function prependToChangelog(version, category, description) {
+function prependToChangelog(version, category, body) {
   const content = fs.readFileSync(CHANGELOG_PATH, 'utf8');
   const entry = [
     `## [${version}] - ${todayDate()}`,
     ``,
     `### ${category}`,
-    `- ${description}`,
+    body,
     ``,
     ``,
   ].join('\n');
@@ -104,13 +110,14 @@ async function main() {
   // bump type
   const ver = currentVersion();
   console.log(`\nТекущая версия: ${ver}`);
-  console.log('Тип изменения:');
-  BUMP_TYPES.forEach((t, i) => console.log(`  ${i + 1}) ${t}`));
+  console.log('Обновить версию:');
+  BUMP_OPTIONS.forEach((o, i) => console.log(`  ${i + 1}) ${o.label}`));
   const bumpInput = await ask(rl, 'Выбор [1]: ');
   const bumpIndex = parseInt(bumpInput, 10) - 1;
-  const bumpType = BUMP_TYPES[bumpIndex] ?? 'patch';
-  const newVersion = bumpVersion(ver, bumpType);
-  console.log(`Новая версия: ${newVersion}`);
+  const selectedBump = BUMP_OPTIONS[bumpIndex] ?? BUMP_OPTIONS[0];
+  const skipVersionBump = selectedBump.type === null;
+  const newVersion = skipVersionBump ? ver : bumpVersion(ver, selectedBump.type);
+  console.log(skipVersionBump ? `Версия остаётся: ${ver}` : `Новая версия: ${newVersion}`);
 
   // category
   console.log('\nКатегория:');
@@ -123,12 +130,20 @@ async function main() {
   const area = await ask(rl, '\nФункциональность (Enter — пропустить): ');
   const subArea = area ? await ask(rl, 'Подраздел (Enter — пропустить): ') : '';
 
-  // description
-  const description = await ask(rl, 'Описание: ');
-  if (!description) {
+  // description(s)
+  const firstDesc = await ask(rl, 'Описание: ');
+  if (!firstDesc) {
     console.log('Описание не введено, отмена.\n');
     rl.close();
     process.exit(1);
+  }
+  const descriptions = [firstDesc];
+
+  while (true) {
+    const more = await ask(rl, 'Добавить ещё строку? (y/n) [n]: ');
+    if (more.toLowerCase() !== 'y') break;
+    const extra = await ask(rl, 'Описание: ');
+    if (extra) descriptions.push(extra);
   }
 
   const doCommit = await ask(rl, '\nСделать коммит сразу? (y/n) [y]: ');
@@ -138,23 +153,30 @@ async function main() {
   const areaLine = area
     ? `функциональность "${area}"${subArea ? ` / "${subArea}"` : ''}`
     : null;
+
   const body = areaLine
-    ? `${areaLine}\n    - ${description}`
-    : description;
+    ? `- ${areaLine}\n${descriptions.map((d) => `    - ${d}`).join('\n')}`
+    : descriptions.map((d) => `- ${d}`).join('\n');
 
   prependToChangelog(newVersion, category, body);
 
-  execSync(`npm version ${newVersion} --no-git-tag-version`, {
-    stdio: 'ignore',
-    env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
-  });
+  if (!skipVersionBump) {
+    execSync(`npm version ${newVersion} --no-git-tag-version`, {
+      stdio: 'ignore',
+      env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
+    });
+  }
+
+  const changedFiles = skipVersionBump
+    ? ['CHANGELOG.md']
+    : ['CHANGELOG.md', 'package.json', 'package-lock.json'];
 
   if (doCommit.toLowerCase() !== 'n') {
-    execSync('git add CHANGELOG.md package.json package-lock.json');
+    execSync(`git add ${changedFiles.join(' ')}`);
     execSync(`git commit -m "chore: update changelog [${newVersion}]"`);
-    console.log(`\n✓ CHANGELOG.md, package.json, package-lock.json обновлены и закоммичены → версия ${newVersion}\n`);
+    console.log(`\n✓ ${changedFiles.join(', ')} обновлены и закоммичены → версия ${newVersion}\n`);
   } else {
-    console.log(`\n✓ CHANGELOG.md, package.json, package-lock.json обновлены → версия ${newVersion}`);
+    console.log(`\n✓ ${changedFiles.join(', ')} обновлены → версия ${newVersion}`);
     console.log('  Изменения не закоммичены — добавьте их в свой коммит вручную.\n');
   }
 }
