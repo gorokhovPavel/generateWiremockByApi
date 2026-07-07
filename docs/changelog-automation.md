@@ -49,23 +49,21 @@ npm run changelog
 
 ```
 scripts/
-  changelog.mjs          — интерактивный скрипт обновления CHANGELOG
-  install-hooks.mjs      — установка git-хука pre-push (macOS / Linux, опционально)
-  install-hooks-win.mjs  — установка git-хука pre-push (Windows, опционально)
+  changelog.mjs  — интерактивный скрипт обновления CHANGELOG
 ```
 
 ## Автоматизация через git-хук (опционально)
 
-Чтобы скрипт запускался автоматически перед каждым `git push`:
+Чтобы скрипт запускался автоматически перед каждым `git push`, создайте файл `.git/hooks/pre-push`:
 
-**macOS / Linux**
-```bash
-npm run changelog:install
+```sh
+#!/bin/sh
+node scripts/changelog.mjs
 ```
 
-**Windows** (требуется [Git for Windows](https://git-scm.com/download/win))
+На macOS / Linux выдайте права на выполнение:
 ```bash
-npm run changelog:install-win
+chmod +x .git/hooks/pre-push
 ```
 
 ## Формат записи в CHANGELOG.md

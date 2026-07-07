@@ -7,9 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "generate": "node wiremock/generate-wiremock.cjs",
-    "changelog": "node scripts/changelog.mjs",
-    "changelog:install": "node scripts/install-hooks.mjs",
-    "changelog:install-win": "node scripts/install-hooks-win.mjs"
+    "changelog": "node scripts/changelog.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
