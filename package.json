@@ -6,7 +6,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "generate": "node wiremock/generate-wiremock.cjs"
+    "generate": "node wiremock/generate-wiremock.cjs",
+    "changelog": "node scripts/changelog.mjs",
+    "changelog:install": "node scripts/install-hooks.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
