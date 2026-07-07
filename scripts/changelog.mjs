@@ -140,7 +140,7 @@ async function main() {
   const descriptions = [firstDesc];
 
   while (true) {
-    const more = await ask(rl, 'Добавить ещё строку? (y/n) [n]: ');
+    const more = await ask(rl, 'Добавить ещё одно описание? (y / Enter — пропустить): ');
     if (more.toLowerCase() !== 'y') break;
     const extra = await ask(rl, 'Описание: ');
     if (extra) descriptions.push(extra);
