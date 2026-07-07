@@ -7,7 +7,8 @@ type FeatureFlags = Record<FeatureFlagName, boolean>;
 type ShortName<T extends string> = T extends `${string}__${infer R}` ? ShortName<R> : T;
 
 type FlagControl = {
-  set: (value: boolean) => void;
+  on: () => void;
+  off: () => void;
   reset: () => void;
 };
 
@@ -73,9 +74,14 @@ if (typeof window !== 'undefined') {
 
   const flagControls = flags.reduce((acc, flag) => {
     acc[shortName(flag)] = {
-      set: (value: boolean) => {
+      on: () => {
         const overrides = getLocalOverrides();
-        overrides[flag] = value;
+        overrides[flag] = true;
+        saveAndReload(overrides);
+      },
+      off: () => {
+        const overrides = getLocalOverrides();
+        overrides[flag] = false;
         saveAndReload(overrides);
       },
       reset: () => {
