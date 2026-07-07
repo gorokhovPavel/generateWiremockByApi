@@ -1,6 +1,139 @@
 .page {
-  max-width: 800px;
+  max-width: 720px;
   margin: 0 auto;
   padding: 48px 24px;
   font-family: sans-serif;
+}
+
+.page h1 {
+  margin-bottom: 24px;
+  font-size: 24px;
+}
+
+/* Flag panel */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.flagRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.flagInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.flagName {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.flagMeta {
+  font-size: 12px;
+  color: #666;
+}
+
+.override {
+  color: #e67e00;
+}
+
+/* Controls */
+.flagControls {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f5f5f5;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn:hover {
+  background: #e8e8e8;
+}
+
+.btnActive {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+.btnReset {
+  border-color: #e67e00;
+  color: #e67e00;
+}
+
+.btnReset:hover {
+  background: #fff4e6;
+}
+
+/* Demo section */
+.demo h2 {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+
+.featureNew {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.featureOld {
+  background: #f5f5f5;
+  border-color: #d4d4d4;
+  color: #444;
+}
+
+.featureBadge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
+.feature strong {
+  font-size: 16px;
+}
+
+.feature p {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.feature code {
+  font-size: 12px;
+  background: rgba(0,0,0,0.08);
+  padding: 1px 4px;
+  border-radius: 3px;
 }
