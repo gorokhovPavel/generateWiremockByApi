@@ -45,16 +45,14 @@ export const features = getFeatureFlags();
 if (typeof window !== 'undefined') {
   // --- console table ---
   const flags = Object.keys(flagsConfig) as FeatureFlagName[];
-  const colFlag = Math.max('Flag'.length, ...flags.map((f) => f.length));
-  const colVal  = 'Value'.length;
+  const colFlag = Math.max(...flags.map((f) => f.length));
+  const colVal  = 'false'.length;
   const divider = (l: string, m: string, r: string) =>
     l + '─'.repeat(colFlag + 2) + m + '─'.repeat(colVal + 2) + r;
   const row = (flag: string, val: string) =>
     `│ ${flag.padEnd(colFlag)} │ ${val.padEnd(colVal)} │`;
   const lines = [
     divider('┌', '┬', '┐'),
-    row('Flag', 'Value'),
-    divider('├', '┼', '┤'),
     ...flags.map((f) => row(f, String(features[f]))),
     divider('└', '┴', '┘'),
   ].join('\n');
