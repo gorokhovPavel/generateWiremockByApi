@@ -3,6 +3,9 @@ import flagsConfig from './featureFlag.json';
 type FeatureFlagName = keyof typeof flagsConfig;
 type FeatureFlags = Record<FeatureFlagName, boolean>;
 
+// Извлекает часть после последнего __ : "06_07__140622__ADD_NEW_API" → "ADD_NEW_API"
+type ShortName<T extends string> = T extends `${string}__${infer R}` ? ShortName<R> : T;
+
 type FlagControl = {
   set: (value: boolean) => void;
   reset: () => void;
@@ -10,7 +13,7 @@ type FlagControl = {
 
 declare global {
   interface Window {
-    FF_OVERRIDE: { [K in FeatureFlagName]: FlagControl } & { resetAll: () => void };
+    FF_OVERRIDE: { [K in FeatureFlagName as ShortName<K>]: FlagControl } & { resetAll: () => void };
   }
 }
 
@@ -58,13 +61,18 @@ if (typeof window !== 'undefined') {
   console.log('🚩 Feature Flags\n' + lines);
 
   // --- window.FF_OVERRIDE ---
+  const shortName = (flag: string): string => {
+    const parts = flag.split('__');
+    return parts[parts.length - 1];
+  };
+
   const saveAndReload = (overrides: Partial<FeatureFlags>) => {
     localStorage.setItem('FF_OVERRIDE', JSON.stringify(overrides));
     window.location.reload();
   };
 
   const flagControls = flags.reduce((acc, flag) => {
-    acc[flag] = {
+    acc[shortName(flag)] = {
       set: (value: boolean) => {
         const overrides = getLocalOverrides();
         overrides[flag] = value;
@@ -77,7 +85,7 @@ if (typeof window !== 'undefined') {
       },
     };
     return acc;
-  }, {} as { [K in FeatureFlagName]: FlagControl });
+  }, {} as Record<string, FlagControl>);
 
   window.FF_OVERRIDE = {
     ...flagControls,
@@ -85,7 +93,5 @@ if (typeof window !== 'undefined') {
       localStorage.removeItem('FF_OVERRIDE');
       window.location.reload();
     },
-  };
-
-  console.log('💡 FF_OVERRIDE доступен в консоли: FF_OVERRIDE.<flag>.set(true/false) | FF_OVERRIDE.<flag>.reset() | FF_OVERRIDE.resetAll()');
+  } as Window['FF_OVERRIDE'];
 }
