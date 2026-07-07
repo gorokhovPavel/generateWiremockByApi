@@ -118,8 +118,12 @@ async function main() {
   const catIndex = parseInt(catInput, 10) - 1;
   const category = CATEGORIES[catIndex] ?? CATEGORIES[0];
 
+  // functional area
+  const area = await ask(rl, '\nФункциональность (Enter — пропустить): ');
+  const subArea = area ? await ask(rl, 'Подраздел (Enter — пропустить): ') : '';
+
   // description
-  const description = await ask(rl, '\nОписание: ');
+  const description = await ask(rl, 'Описание: ');
   if (!description) {
     console.log('Описание не введено, отмена.\n');
     rl.close();
@@ -128,7 +132,14 @@ async function main() {
 
   rl.close();
 
-  prependToChangelog(newVersion, category, description);
+  const areaLine = area
+    ? `функциональность "${area}"${subArea ? ` / "${subArea}"` : ''}`
+    : null;
+  const body = areaLine
+    ? `${areaLine}\n    - ${description}`
+    : description;
+
+  prependToChangelog(newVersion, category, body);
 
   execSync('git add CHANGELOG.md');
   execSync(`git commit -m "chore: update changelog [${newVersion}]"`);
