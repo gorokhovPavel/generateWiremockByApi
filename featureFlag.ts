@@ -9,12 +9,11 @@ type ShortName<T extends string> = T extends `${string}__${infer R}` ? ShortName
 type FlagControl = {
   on: () => void;
   off: () => void;
-  reset: () => void;
 };
 
 declare global {
   interface Window {
-    FF_OVERRIDE: { [K in FeatureFlagName as ShortName<K>]: FlagControl } & { resetAll: () => void };
+    FF_OVERRIDE: { [K in FeatureFlagName as ShortName<K>]: FlagControl };
   }
 }
 
@@ -84,20 +83,9 @@ if (typeof window !== 'undefined') {
         overrides[flag] = false;
         saveAndReload(overrides);
       },
-      reset: () => {
-        const overrides = getLocalOverrides();
-        delete overrides[flag];
-        saveAndReload(overrides);
-      },
     };
     return acc;
   }, {} as Record<string, FlagControl>);
 
-  window.FF_OVERRIDE = {
-    ...flagControls,
-    resetAll: () => {
-      localStorage.removeItem('FF_OVERRIDE');
-      window.location.reload();
-    },
-  } as Window['FF_OVERRIDE'];
+  window.FF_OVERRIDE = flagControls as Window['FF_OVERRIDE'];
 }
