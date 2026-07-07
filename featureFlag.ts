@@ -10,7 +10,7 @@ type FlagControl = {
 
 declare global {
   interface Window {
-    FF: { [K in FeatureFlagName]: FlagControl } & { resetAll: () => void };
+    FF_OVERRIDE: { [K in FeatureFlagName]: FlagControl } & { resetAll: () => void };
   }
 }
 
@@ -57,7 +57,7 @@ if (typeof window !== 'undefined') {
   ].join('\n');
   console.log('🚩 Feature Flags\n' + lines);
 
-  // --- window.FF ---
+  // --- window.FF_OVERRIDE ---
   const saveAndReload = (overrides: Partial<FeatureFlags>) => {
     localStorage.setItem('FF_OVERRIDE', JSON.stringify(overrides));
     window.location.reload();
@@ -79,7 +79,7 @@ if (typeof window !== 'undefined') {
     return acc;
   }, {} as { [K in FeatureFlagName]: FlagControl });
 
-  window.FF = {
+  window.FF_OVERRIDE = {
     ...flagControls,
     resetAll: () => {
       localStorage.removeItem('FF_OVERRIDE');
@@ -87,5 +87,5 @@ if (typeof window !== 'undefined') {
     },
   };
 
-  console.log('💡 FF доступен в консоли: FF.<flag>.set(true/false) | FF.<flag>.reset() | FF.resetAll()');
+  console.log('💡 FF_OVERRIDE доступен в консоли: FF_OVERRIDE.<flag>.set(true/false) | FF_OVERRIDE.<flag>.reset() | FF_OVERRIDE.resetAll()');
 }
