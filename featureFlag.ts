@@ -60,7 +60,9 @@ export const logFeatureFlags = (flags: Record<string, boolean>): void => {
   parts.push('%c' + divider('└', '┴', '┘'));
   styles.push('');
 
-  console.log('🚩 Feature Flags\n' + parts.join(''), ...styles);
+  console.groupCollapsed('🚩 Feature Flags');
+  console.log(parts.join(''), ...styles);
+  console.groupEnd();
 };
 
 export const enableDevTools = (): void => {
