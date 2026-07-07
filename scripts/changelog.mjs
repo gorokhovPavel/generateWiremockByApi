@@ -131,6 +131,8 @@ async function main() {
     process.exit(1);
   }
 
+  const doCommit = await ask(rl, '\nСделать коммит сразу? (y/n) [y]: ');
+
   rl.close();
 
   const areaLine = area
@@ -147,10 +149,14 @@ async function main() {
     env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
   });
 
-  execSync('git add CHANGELOG.md package.json package-lock.json');
-  execSync(`git commit -m "chore: update changelog [${newVersion}]"`);
-
-  console.log(`\n✓ CHANGELOG.md, package.json, package-lock.json обновлены → версия ${newVersion}\n`);
+  if (doCommit.toLowerCase() !== 'n') {
+    execSync('git add CHANGELOG.md package.json package-lock.json');
+    execSync(`git commit -m "chore: update changelog [${newVersion}]"`);
+    console.log(`\n✓ CHANGELOG.md, package.json, package-lock.json обновлены и закоммичены → версия ${newVersion}\n`);
+  } else {
+    console.log(`\n✓ CHANGELOG.md, package.json, package-lock.json обновлены → версия ${newVersion}`);
+    console.log('  Изменения не закоммичены — добавьте их в свой коммит вручную.\n');
+  }
 }
 
 main().catch((err) => {
