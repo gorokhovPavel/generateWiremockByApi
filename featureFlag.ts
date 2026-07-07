@@ -53,7 +53,7 @@ if (typeof window !== 'undefined') {
     `│ ${flag.padEnd(colFlag)} │ ${val.padEnd(colVal)} │`;
 
   const ON  = 'color:#166534;background:#dcfce7;padding:1px 0';
-  const OFF = 'color:#991b1b;background:#fee2e2;padding:1px 0';
+  const OFF = 'color:#c0706e;background:#fff4f4;padding:1px 0';
 
   const parts: string[] = ['%c' + divider('┌', '┬', '┐') + '\n'];
   const styles: string[] = [''];
