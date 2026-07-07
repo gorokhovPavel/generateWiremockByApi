@@ -31,25 +31,24 @@ const getFeatureFlags = (): FeatureFlags => {
 export const features = getFeatureFlags();
 
 if (typeof window !== 'undefined') {
-  const overrides = getLocalOverrides();
+  const flags = Object.keys(flagsConfig) as FeatureFlagName[];
 
-  console.log(
-    '%c 🚩 Feature Flags ',
-    'background:#6366f1;color:#fff;font-weight:bold;font-size:13px;padding:3px 10px;border-radius:4px;',
-  );
+  const colFlag = Math.max('Flag'.length, ...flags.map((f) => f.length));
+  const colVal  = 'Value'.length;
 
-  const table = (Object.keys(flagsConfig) as FeatureFlagName[]).reduce<
-    Record<string, { default: boolean; override: string; active: boolean; source: string }>
-  >((acc, flag) => {
-    const hasOverride = flag in overrides;
-    acc[flag] = {
-      default:  flagsConfig[flag],
-      override: hasOverride ? String(overrides[flag]) : '—',
-      active:   features[flag],
-      source:   hasOverride ? '⚙️ localStorage' : '📄 featureFlag.json',
-    };
-    return acc;
-  }, {});
+  const divider = (l: string, m: string, r: string) =>
+    l + '─'.repeat(colFlag + 2) + m + '─'.repeat(colVal + 2) + r;
 
-  console.table(table);
+  const row = (flag: string, val: string) =>
+    `│ ${flag.padEnd(colFlag)} │ ${val.padEnd(colVal)} │`;
+
+  const lines = [
+    divider('┌', '┬', '┐'),
+    row('Flag', 'Value'),
+    divider('├', '┼', '┤'),
+    ...flags.map((f) => row(f, String(flagsConfig[f]))),
+    divider('└', '┴', '┘'),
+  ].join('\n');
+
+  console.log('🚩 Feature Flags\n' + lines);
 }
