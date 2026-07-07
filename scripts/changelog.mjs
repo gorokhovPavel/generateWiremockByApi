@@ -25,6 +25,26 @@ const BUMP_OPTIONS = [
 const ask = (rl, question) =>
   new Promise((resolve) => rl.question(question, (a) => resolve(a.trim())));
 
+const askChoice = async (rl, question, count) => {
+  while (true) {
+    const input = await ask(rl, question);
+    if (input === '') return 0;
+    const index = parseInt(input, 10) - 1;
+    if (!isNaN(index) && index >= 0 && index < count) return index;
+    console.log(`  ✗ Некорректный ввод — введите число от 1 до ${count}`);
+  }
+};
+
+const askYesNo = async (rl, question, defaultYes = true) => {
+  while (true) {
+    const input = await ask(rl, question);
+    if (input === '') return defaultYes;
+    if (input.toLowerCase() === 'y') return true;
+    if (input.toLowerCase() === 'n') return false;
+    console.log('  ✗ Некорректный ввод — введите y или n');
+  }
+};
+
 function currentVersion() {
   const content = fs.readFileSync(CHANGELOG_PATH, 'utf8');
   const match = content.match(/## \[(\d+\.\d+\.\d+)\]/);
@@ -100,8 +120,8 @@ async function main() {
   console.log(recentCommits().split('\n').map((l) => '  ' + l).join('\n'));
   console.log('');
 
-  const proceed = await ask(rl, 'Обновить CHANGELOG? (y/n): ');
-  if (proceed.toLowerCase() !== 'y') {
+  const proceed = await askYesNo(rl, 'Обновить CHANGELOG? (y/n): ', false);
+  if (!proceed) {
     console.log('Пропущено.\n');
     rl.close();
     process.exit(0);
@@ -110,11 +130,10 @@ async function main() {
   // bump type
   const ver = currentVersion();
   console.log(`\nТекущая версия: ${ver}`);
-  console.log('Версия package.json:');
+  console.log('Выберите тип обновления версии package.json:');
   BUMP_OPTIONS.forEach((o, i) => console.log(`  ${i + 1}) ${o.label}`));
-  const bumpInput = await ask(rl, 'Выбор [1]: ');
-  const bumpIndex = parseInt(bumpInput, 10) - 1;
-  const selectedBump = BUMP_OPTIONS[bumpIndex] ?? BUMP_OPTIONS[0];
+  const bumpIndex = await askChoice(rl, 'Выбор [1]: ', BUMP_OPTIONS.length);
+  const selectedBump = BUMP_OPTIONS[bumpIndex];
   const skipVersionBump = selectedBump.type === null;
   const newVersion = skipVersionBump ? ver : bumpVersion(ver, selectedBump.type);
   console.log(skipVersionBump ? `Версия остаётся: ${ver}` : `Новая версия: ${newVersion}`);
@@ -122,9 +141,8 @@ async function main() {
   // category
   console.log('\nКатегория:');
   CATEGORIES.forEach((c, i) => console.log(`  ${i + 1}) ${c}`));
-  const catInput = await ask(rl, 'Выбор [1]: ');
-  const catIndex = parseInt(catInput, 10) - 1;
-  const category = CATEGORIES[catIndex] ?? CATEGORIES[0];
+  const catIndex = await askChoice(rl, 'Выбор [1]: ', CATEGORIES.length);
+  const category = CATEGORIES[catIndex];
 
   // functional area
   const area = await ask(rl, '\nФункциональность (Enter — пропустить): ');
@@ -145,7 +163,7 @@ async function main() {
     descriptions.push(extra);
   }
 
-  const doCommit = await ask(rl, '\nСделать коммит сразу? (y/n) [y]: ');
+  const doCommit = await askYesNo(rl, '\nСделать коммит сразу? (y/n) [y]: ', true);
 
   rl.close();
 
@@ -170,7 +188,7 @@ async function main() {
     ? ['CHANGELOG.md']
     : ['CHANGELOG.md', 'package.json', 'package-lock.json'];
 
-  if (doCommit.toLowerCase() !== 'n') {
+  if (doCommit) {
     execSync(`git add ${changedFiles.join(' ')}`);
     execSync(`git commit -m "chore: update changelog [${newVersion}]"`);
     console.log(`\n✓ ${changedFiles.join(', ')} обновлены и закоммичены → версия ${newVersion}\n`);
