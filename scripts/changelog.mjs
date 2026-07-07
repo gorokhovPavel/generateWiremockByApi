@@ -110,7 +110,7 @@ async function main() {
   // bump type
   const ver = currentVersion();
   console.log(`\nТекущая версия: ${ver}`);
-  console.log('Обновить версию:');
+  console.log('Версия package.json:');
   BUMP_OPTIONS.forEach((o, i) => console.log(`  ${i + 1}) ${o.label}`));
   const bumpInput = await ask(rl, 'Выбор [1]: ');
   const bumpIndex = parseInt(bumpInput, 10) - 1;
