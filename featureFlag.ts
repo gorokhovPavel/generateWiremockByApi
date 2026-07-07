@@ -51,12 +51,21 @@ if (typeof window !== 'undefined') {
     l + '─'.repeat(colFlag + 2) + m + '─'.repeat(colVal + 2) + r;
   const row = (flag: string, val: string) =>
     `│ ${flag.padEnd(colFlag)} │ ${val.padEnd(colVal)} │`;
-  const lines = [
-    divider('┌', '┬', '┐'),
-    ...flags.map((f) => row(f, String(features[f]))),
-    divider('└', '┴', '┘'),
-  ].join('\n');
-  console.log('🚩 Feature Flags\n' + lines);
+
+  const ON  = 'color:#166534;background:#dcfce7;padding:1px 0';
+  const OFF = 'color:#991b1b;background:#fee2e2;padding:1px 0';
+
+  const parts: string[] = ['%c' + divider('┌', '┬', '┐') + '\n'];
+  const styles: string[] = [''];
+  flags.forEach((f) => {
+    const val = features[f];
+    parts.push('%c' + row(f, String(val)) + '\n');
+    styles.push(val ? ON : OFF);
+  });
+  parts.push('%c' + divider('└', '┴', '┘'));
+  styles.push('');
+
+  console.log('🚩 Feature Flags\n' + parts.join(''), ...styles);
 
   // --- window.FF_OVERRIDE ---
   const shortName = (flag: string): string => {
