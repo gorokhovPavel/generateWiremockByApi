@@ -70,6 +70,7 @@ function prependToChangelog(version, category, description) {
     `### ${category}`,
     `- ${description}`,
     ``,
+    ``,
   ].join('\n');
 
   const firstEntry = content.indexOf('## [');
