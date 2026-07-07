@@ -43,22 +43,22 @@ function todayDate() {
 function recentCommits() {
   try {
     const lastChangelogCommit = execSync(
-      'git log --oneline -- CHANGELOG.md 2>/dev/null | head -1',
-      { encoding: 'utf8' }
-    ).trim();
+      'git log --oneline -- CHANGELOG.md',
+      { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }
+    ).trim().split('\n')[0] ?? '';
 
-    const since = lastChangelogCommit ? lastChangelogCommit.split(' ')[0] + '..HEAD' : '-10';
-    const range = lastChangelogCommit ? `${lastChangelogCommit.split(' ')[0]}..HEAD` : '-10';
+    const flag = lastChangelogCommit
+      ? `${lastChangelogCommit.split(' ')[0]}..HEAD`
+      : '-10';
 
-    const flag = lastChangelogCommit ? range : '-10';
     const log = execSync(
-      `git log --oneline ${flag} -- . ":(exclude)CHANGELOG.md" 2>/dev/null`,
-      { encoding: 'utf8' }
+      `git log --oneline ${flag} -- . ":(exclude)CHANGELOG.md"`,
+      { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }
     ).trim();
 
     return log || '(нет коммитов)';
   } catch {
-    return '(не удалось получить список коммитов)';
+    return '(нет коммитов)';
   }
 }
 
