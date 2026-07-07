@@ -142,10 +142,12 @@ async function main() {
 
   prependToChangelog(newVersion, category, body);
 
-  execSync('git add CHANGELOG.md');
+  execSync(`npm version ${newVersion} --no-git-tag-version`, { stdio: 'ignore' });
+
+  execSync('git add CHANGELOG.md package.json package-lock.json');
   execSync(`git commit -m "chore: update changelog [${newVersion}]"`);
 
-  console.log(`\n✓ CHANGELOG.md обновлён → версия ${newVersion}\n`);
+  console.log(`\n✓ CHANGELOG.md, package.json, package-lock.json обновлены → версия ${newVersion}\n`);
 }
 
 main().catch((err) => {
