@@ -10,7 +10,6 @@ const CATEGORIES = [
   'Изменено',
   'Исправлено',
   'Удалено',
-  'Общее',
 ];
 
 const BUMP_OPTIONS = [
@@ -157,6 +156,12 @@ async function main() {
     return list;
   };
 
+  const resolveArea = (input) => {
+    if (!input) return '';
+    if (input.trim() === '1') return 'общее';
+    return input;
+  };
+
   const buildAreaLine = (area, subArea) => {
     if (!area) return null;
     if (area.toLowerCase() === 'общее') return 'общее';
@@ -166,8 +171,9 @@ async function main() {
   const blocks = [];
 
   // первый блок — функциональность опциональна
-  const firstArea = await ask(rl, '\nФункциональность (Enter — пропустить): ');
-  const firstSubArea = firstArea ? await ask(rl, 'Подраздел (Enter — пропустить): ') : '';
+  const firstAreaRaw = await ask(rl, '\nФункциональность (1 — общее, Enter — пропустить): ');
+  const firstArea = resolveArea(firstAreaRaw);
+  const firstSubArea = firstArea && firstArea !== 'общее' ? await ask(rl, 'Подраздел (Enter — пропустить): ') : '';
   const firstDescs = await collectDescriptions();
   if (!firstDescs) {
     console.log('Описание не введено, отмена.\n');
@@ -178,9 +184,10 @@ async function main() {
 
   // дополнительные блоки
   while (true) {
-    const nextArea = await ask(rl, '\nЕщё одна функциональность? (Enter — завершить): ');
-    if (!nextArea) break;
-    const nextSubArea = await ask(rl, 'Подраздел (Enter — пропустить): ');
+    const nextAreaRaw = await ask(rl, '\nЕщё одна функциональность? (1 — общее, Enter — завершить): ');
+    if (!nextAreaRaw) break;
+    const nextArea = resolveArea(nextAreaRaw);
+    const nextSubArea = nextArea && nextArea !== 'общее' ? await ask(rl, 'Подраздел (Enter — пропустить): ') : '';
     const nextDescs = await collectDescriptions();
     if (!nextDescs) break;
     blocks.push({ area: nextArea, subArea: nextSubArea, descriptions: nextDescs });
