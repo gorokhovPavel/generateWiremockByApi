@@ -60,7 +60,7 @@ export const logFeatureFlags = (flags: Record<string, boolean>): void => {
   parts.push('%c' + divider('└', '┴', '┘'));
   styles.push('');
 
-  console.groupCollapsed('Фиче флаги 2197');
+  console.groupCollapsed('🚩 Фиче флаги 2197');
   console.log(parts.join(''), ...styles);
   console.groupEnd();
 };
