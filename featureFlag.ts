@@ -4,8 +4,8 @@ type FeatureFlagName = keyof typeof flagsConfig;
 type FeatureFlags = Record<FeatureFlagName, boolean>;
 
 type FlagControl = {
-  on: () => void;
-  off: () => void;
+  get on(): void;
+  get off(): void;
 };
 
 export const FF_OVERRIDE_KEY = 'FF_OVERRIDE' as const;
@@ -79,18 +79,26 @@ export const enableDevTools = (): void => {
   };
 
   const flagControls = (Object.keys(flagsConfig) as FeatureFlagName[]).reduce((acc: Record<string, FlagControl>, flag) => {
-    acc[shortName(flag)] = {
-      on: () => {
+    const control = {} as FlagControl;
+    Object.defineProperty(control, 'on', {
+      get() {
         const overrides = getLocalOverrides();
         overrides[flag] = true;
         saveAndReload(overrides);
       },
-      off: () => {
+      enumerable: true,
+      configurable: true,
+    });
+    Object.defineProperty(control, 'off', {
+      get() {
         const overrides = getLocalOverrides();
         overrides[flag] = false;
         saveAndReload(overrides);
       },
-    };
+      enumerable: true,
+      configurable: true,
+    });
+    acc[shortName(flag)] = control;
     return acc;
   }, {} as Record<string, FlagControl>);
 
