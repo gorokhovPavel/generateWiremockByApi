@@ -1,6 +1,6 @@
 {
   "name": "generatewiremockbyapi",
-  "version": "6.81.0",
+  "version": "6.80.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
