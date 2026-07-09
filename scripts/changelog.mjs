@@ -146,7 +146,7 @@ async function main() {
 
   // functional area
   const area = await ask(rl, '\nФункциональность (Enter — пропустить): ');
-  const subArea = area ? await ask(rl, 'Подраздел (Enter — пропустить): ') : '';
+  const subArea = area ? await ask(rl, 'Подраздел в функциональности .../... (Enter — пропустить): ') : '';
 
   // description(s)
   const firstDesc = await ask(rl, 'Описание: ');
@@ -168,7 +168,9 @@ async function main() {
   rl.close();
 
   const areaLine = area
-    ? `функциональность "${area}"${subArea ? ` / "${subArea}"` : ''}`
+    ? area.toLowerCase() === 'общее'
+      ? 'общее'
+      : `функциональность "${area}"${subArea ? ` / "${subArea}"` : ''}`
     : null;
 
   const body = areaLine
