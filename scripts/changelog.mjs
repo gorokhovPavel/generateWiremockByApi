@@ -3,6 +3,8 @@ import readline from 'readline';
 import fs from 'fs';
 import { execSync } from 'child_process';
 
+// --- constants ---
+
 const CHANGELOG_PATH = 'CHANGELOG.md';
 
 const CATEGORIES = [
@@ -19,7 +21,7 @@ const BUMP_OPTIONS = [
   { label: 'не обновляем', type: null    },
 ];
 
-// --- helpers ---
+// --- prompt helpers ---
 
 const ask = (rl, question) =>
   new Promise((resolve) => rl.question(question, (a) => resolve(a.trim())));
@@ -34,38 +36,52 @@ const askChoice = async (rl, question, count) => {
   }
 };
 
-const askYesNo = async (rl, question, defaultYes = true) => {
-  while (true) {
-    const input = await ask(rl, question);
-    if (input === '') return defaultYes;
-    if (['y', 'д'].includes(input.toLowerCase())) return true;
-    if (['n', 'н'].includes(input.toLowerCase())) return false;
-    console.log('  ✗ Некорректный ввод — введите y/д или n/н');
-  }
+// --- pure data helpers ---
+
+const resolveArea = (input) => {
+  if (!input) return '';
+  if (input.trim() === '1') return 'общее';
+  return input;
 };
 
-function currentVersion() {
+const buildAreaLine = (area, subArea) => {
+  if (!area) return null;
+  if (area.toLowerCase() === 'общее') return 'общее';
+  return `функциональность "${area}"${subArea ? ` / "${subArea}"` : ''}`;
+};
+
+const buildBlockBody = ({ area, subArea, descriptions }) => {
+  const areaLine = buildAreaLine(area, subArea);
+  return areaLine
+    ? `- ${areaLine}\n${descriptions.map((d) => `    - ${d}`).join('\n')}`
+    : descriptions.map((d) => `- ${d}`).join('\n');
+};
+
+// --- version helpers ---
+
+const currentVersion = () => {
   const content = fs.readFileSync(CHANGELOG_PATH, 'utf8');
   const match = content.match(/## \[(\d+\.\d+\.\d+)\]/);
   return match ? match[1] : '0.0.0';
-}
+};
 
-function bumpVersion(version, type) {
+const bumpVersion = (version, type) => {
   const [major, minor, patch] = version.split('.').map(Number);
   if (type === 'major') return `${major + 1}.0.0`;
   if (type === 'minor') return `${major}.${minor + 1}.0`;
   return `${major}.${minor}.${patch + 1}`;
-}
+};
 
-function todayDate() {
+const todayDate = () => {
   const d = new Date();
   const dd = String(d.getDate()).padStart(2, '0');
   const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const yyyy = d.getFullYear();
-  return `${dd}.${mm}.${yyyy}`;
-}
+  return `${dd}.${mm}.${d.getFullYear()}`;
+};
 
-function recentCommits() {
+// --- git helpers ---
+
+const recentCommits = () => {
   try {
     const lastChangelogCommit = execSync(
       'git log --oneline -- CHANGELOG.md',
@@ -85,9 +101,11 @@ function recentCommits() {
   } catch {
     return '(нет коммитов)';
   }
-}
+};
 
-function prependToChangelog(version, sections, skipVersion) {
+// --- changelog writer ---
+
+const prependToChangelog = (version, sections, skipVersion) => {
   const content = fs.readFileSync(CHANGELOG_PATH, 'utf8');
   const sectionsText = sections
     .map(({ category, body }) => `### ${category}\n${body}`)
@@ -103,7 +121,59 @@ function prependToChangelog(version, sections, skipVersion) {
       : content.slice(0, firstEntry) + entry + content.slice(firstEntry);
 
   fs.writeFileSync(CHANGELOG_PATH, updated, 'utf8');
-}
+};
+
+// --- input collectors ---
+
+const collectDescriptions = async (rl) => {
+  const first = await ask(rl, 'Описание: ');
+  if (!first) return null;
+  const list = [first];
+  while (true) {
+    const extra = await ask(rl, 'Ещё одно описание? (текст — добавить строку / Enter — пропустить): ');
+    if (!extra) break;
+    list.push(extra);
+  }
+  return list;
+};
+
+// exitOnEmptyArea: true — пустой ввод завершает цикл (для повторных блоков)
+//                 false — пустой ввод пропускает поле (для первого блока)
+const collectAreaBlock = async (rl, areaPrompt, exitOnEmptyArea = false) => {
+  const areaRaw = await ask(rl, areaPrompt);
+  if (!areaRaw && exitOnEmptyArea) return null;
+  const area = resolveArea(areaRaw);
+  const subArea = area && area !== 'общее'
+    ? await ask(rl, `Подраздел (будет добавлен как "${area} / ..." / Enter — пропустить): `)
+    : '';
+  const descriptions = await collectDescriptions(rl);
+  if (!descriptions) return null;
+  return { area, subArea, descriptions };
+};
+
+const collectCategorySection = async (rl, category) => {
+  const blocks = [];
+
+  const first = await collectAreaBlock(
+    rl,
+    '\nФункциональность (название раздела / 1 — общее / Enter — пропустить): ',
+    false
+  );
+  if (!first) return null;
+  blocks.push(first);
+
+  while (true) {
+    const next = await collectAreaBlock(
+      rl,
+      '\nЕщё одна функциональность? (название раздела / 1 — общее / Enter — пропустить и перейти далее): ',
+      true
+    );
+    if (!next) break;
+    blocks.push(next);
+  }
+
+  return { category, blocks };
+};
 
 // --- main ---
 
@@ -113,6 +183,7 @@ async function main() {
   console.log('\n─────────────────────────────────');
   console.log('  📋 Обновление CHANGELOG');
   console.log('─────────────────────────────────');
+
   const commits = recentCommits();
   if (commits !== '(нет коммитов)') {
     console.log('\nПоследние коммиты:\n');
@@ -120,7 +191,7 @@ async function main() {
     console.log('');
   }
 
-  // bump type
+  // версия
   const ver = currentVersion();
   console.log(`\nТекущая версия: ${ver}`);
   console.log('Выберите тип обновления версии package.json:');
@@ -131,64 +202,17 @@ async function main() {
   const newVersion = skipVersionBump ? ver : bumpVersion(ver, selectedBump.type);
   console.log(skipVersionBump ? `Версия остаётся: ${ver}` : `Новая версия: ${newVersion}`);
 
-  // helpers
-  const collectDescriptions = async () => {
-    const first = await ask(rl, 'Описание: ');
-    if (!first) return null;
-    const list = [first];
-    while (true) {
-      const extra = await ask(rl, 'Ещё одно описание? (текст — добавить строку / Enter — пропустить): ');
-      if (!extra) break;
-      list.push(extra);
-    }
-    return list;
+  // секции
+  const showCategories = () => {
+    console.log('\nКатегория:');
+    CATEGORIES.forEach((c, i) => console.log(`  ${i + 1}) ${c}`));
   };
 
-  const resolveArea = (input) => {
-    if (!input) return '';
-    if (input.trim() === '1') return 'общее';
-    return input;
-  };
-
-  const buildAreaLine = (area, subArea) => {
-    if (!area) return null;
-    if (area.toLowerCase() === 'общее') return 'общее';
-    return `функциональность "${area}"${subArea ? ` / "${subArea}"` : ''}`;
-  };
-
-  // sections: [{ category, blocks: [{ area, subArea, descriptions }] }]
   const sections = [];
 
-  const collectCategoryBlock = async (category) => {
-    const blocks = [];
-
-    // первая функциональность внутри категории
-    const firstAreaRaw = await ask(rl, '\nФункциональность (название раздела / 1 — общее / Enter — пропустить): ');
-    const firstArea = resolveArea(firstAreaRaw);
-    const firstSubArea = firstArea && firstArea !== 'общее' ? await ask(rl, `Подраздел (будет добавлен как "${firstArea} / ..." / Enter — пропустить): `) : '';
-    const firstDescs = await collectDescriptions();
-    if (!firstDescs) return null;
-    blocks.push({ area: firstArea, subArea: firstSubArea, descriptions: firstDescs });
-
-    // дополнительные функциональности в той же категории
-    while (true) {
-      const nextAreaRaw = await ask(rl, '\nЕщё одна функциональность? (название раздела / 1 — общее / Enter — пропустить и перейти дальше): ');
-      if (!nextAreaRaw) break;
-      const nextArea = resolveArea(nextAreaRaw);
-      const nextSubArea = nextArea && nextArea !== 'общее' ? await ask(rl, `Подраздел (будет добавлен как "${nextArea} / ..." / Enter — пропустить): `) : '';
-      const nextDescs = await collectDescriptions();
-      if (!nextDescs) break;
-      blocks.push({ area: nextArea, subArea: nextSubArea, descriptions: nextDescs });
-    }
-
-    return { category, blocks };
-  };
-
-  // первая категория — обязательна
-  console.log('\nКатегория:');
-  CATEGORIES.forEach((c, i) => console.log(`  ${i + 1}) ${c}`));
+  showCategories();
   const firstCatIdx = await askChoice(rl, 'Выбор [1]: ', CATEGORIES.length);
-  const firstSection = await collectCategoryBlock(CATEGORIES[firstCatIdx]);
+  const firstSection = await collectCategorySection(rl, CATEGORIES[firstCatIdx]);
   if (!firstSection) {
     console.log('Описание не введено, отмена.\n');
     rl.close();
@@ -196,18 +220,16 @@ async function main() {
   }
   sections.push(firstSection);
 
-  // дополнительные категории
   while (true) {
-    console.log('\nДобавить ещё одну категорию?');
-    CATEGORIES.forEach((c, i) => console.log(`  ${i + 1}) ${c}`));
-    const nextCatRaw = await ask(rl, 'Выбор (Enter — завершить): ');
+    showCategories();
+    const nextCatRaw = await ask(rl, 'Добавить ещё одну категорию? Выбор (Enter — завершить): ');
     if (!nextCatRaw) break;
     const nextCatIdx = parseInt(nextCatRaw, 10) - 1;
     if (isNaN(nextCatIdx) || nextCatIdx < 0 || nextCatIdx >= CATEGORIES.length) {
       console.log(`  ✗ Некорректный ввод — введите число от 1 до ${CATEGORIES.length}`);
       continue;
     }
-    const nextSection = await collectCategoryBlock(CATEGORIES[nextCatIdx]);
+    const nextSection = await collectCategorySection(rl, CATEGORIES[nextCatIdx]);
     if (!nextSection) break;
     sections.push(nextSection);
   }
@@ -217,17 +239,11 @@ async function main() {
 
   rl.close();
 
-  const builtSections = sections.map(({ category, blocks }) => {
-    const body = blocks
-      .map(({ area, subArea, descriptions }) => {
-        const areaLine = buildAreaLine(area, subArea);
-        return areaLine
-          ? `- ${areaLine}\n${descriptions.map((d) => `    - ${d}`).join('\n')}`
-          : descriptions.map((d) => `- ${d}`).join('\n');
-      })
-      .join('\n');
-    return { category, body };
-  });
+  // запись и коммит
+  const builtSections = sections.map(({ category, blocks }) => ({
+    category,
+    body: blocks.map(buildBlockBody).join('\n'),
+  }));
 
   prependToChangelog(newVersion, builtSections, skipVersionBump);
 
