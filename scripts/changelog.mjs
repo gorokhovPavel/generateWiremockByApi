@@ -38,9 +38,9 @@ const askYesNo = async (rl, question, defaultYes = true) => {
   while (true) {
     const input = await ask(rl, question);
     if (input === '') return defaultYes;
-    if (input.toLowerCase() === 'y') return true;
-    if (input.toLowerCase() === 'n') return false;
-    console.log('  ✗ Некорректный ввод — введите y или n');
+    if (['y', 'д'].includes(input.toLowerCase())) return true;
+    if (['n', 'н'].includes(input.toLowerCase())) return false;
+    console.log('  ✗ Некорректный ввод — введите y/д или n/н');
   }
 };
 
@@ -87,18 +87,16 @@ function recentCommits() {
   }
 }
 
-function prependToChangelog(version, category, body) {
+function prependToChangelog(version, sections, skipVersion) {
   const content = fs.readFileSync(CHANGELOG_PATH, 'utf8');
-  const entry = [
-    `## [${version}] - ${todayDate()}`,
-    ``,
-    `### ${category}`,
-    body,
-    ``,
-    ``,
-  ].join('\n');
+  const sectionsText = sections
+    .map(({ category, body }) => `### ${category}\n${body}`)
+    .join('\n\n');
+  const entry = skipVersion
+    ? [sectionsText, ``, ``].join('\n')
+    : [`## [${version}] - ${todayDate()}`, ``, sectionsText, ``, ``].join('\n');
 
-  const firstEntry = content.indexOf('## [');
+  const firstEntry = content.search(/^## /m);
   const updated =
     firstEntry === -1
       ? content.trimEnd() + '\n\n' + entry
@@ -115,9 +113,12 @@ async function main() {
   console.log('\n─────────────────────────────────');
   console.log('  📋 Обновление CHANGELOG');
   console.log('─────────────────────────────────');
-  console.log('\nПоследние коммиты:\n');
-  console.log(recentCommits().split('\n').map((l) => '  ' + l).join('\n'));
-  console.log('');
+  const commits = recentCommits();
+  if (commits !== '(нет коммитов)') {
+    console.log('\nПоследние коммиты:\n');
+    console.log(commits.split('\n').map((l) => '  ' + l).join('\n'));
+    console.log('');
+  }
 
   // bump type
   const ver = currentVersion();
@@ -130,19 +131,13 @@ async function main() {
   const newVersion = skipVersionBump ? ver : bumpVersion(ver, selectedBump.type);
   console.log(skipVersionBump ? `Версия остаётся: ${ver}` : `Новая версия: ${newVersion}`);
 
-  // category
-  console.log('\nКатегория:');
-  CATEGORIES.forEach((c, i) => console.log(`  ${i + 1}) ${c}`));
-  const catIndex = await askChoice(rl, 'Выбор [1]: ', CATEGORIES.length);
-  const category = CATEGORIES[catIndex];
-
-  // collect one block: area + subArea + descriptions
+  // helpers
   const collectDescriptions = async () => {
     const first = await ask(rl, 'Описание: ');
     if (!first) return null;
     const list = [first];
     while (true) {
-      const extra = await ask(rl, 'Ещё одно описание? (Enter — пропустить): ');
+      const extra = await ask(rl, 'Ещё одно описание? (текст — добавить строку / Enter — пропустить): ');
       if (!extra) break;
       list.push(extra);
     }
@@ -161,45 +156,80 @@ async function main() {
     return `функциональность "${area}"${subArea ? ` / "${subArea}"` : ''}`;
   };
 
-  const blocks = [];
+  // sections: [{ category, blocks: [{ area, subArea, descriptions }] }]
+  const sections = [];
 
-  // первый блок — функциональность опциональна
-  const firstAreaRaw = await ask(rl, '\nФункциональность (1 — общее, Enter — пропустить): ');
-  const firstArea = resolveArea(firstAreaRaw);
-  const firstSubArea = firstArea && firstArea !== 'общее' ? await ask(rl, 'Подраздел (Enter — пропустить): ') : '';
-  const firstDescs = await collectDescriptions();
-  if (!firstDescs) {
+  const collectCategoryBlock = async (category) => {
+    const blocks = [];
+
+    // первая функциональность внутри категории
+    const firstAreaRaw = await ask(rl, '\nФункциональность (название раздела / 1 — общее / Enter — пропустить): ');
+    const firstArea = resolveArea(firstAreaRaw);
+    const firstSubArea = firstArea && firstArea !== 'общее' ? await ask(rl, `Подраздел (будет добавлен как "${firstArea} / ..." / Enter — пропустить): `) : '';
+    const firstDescs = await collectDescriptions();
+    if (!firstDescs) return null;
+    blocks.push({ area: firstArea, subArea: firstSubArea, descriptions: firstDescs });
+
+    // дополнительные функциональности в той же категории
+    while (true) {
+      const nextAreaRaw = await ask(rl, '\nЕщё одна функциональность? (название раздела / 1 — общее / Enter — пропустить и перейти дальше): ');
+      if (!nextAreaRaw) break;
+      const nextArea = resolveArea(nextAreaRaw);
+      const nextSubArea = nextArea && nextArea !== 'общее' ? await ask(rl, `Подраздел (будет добавлен как "${nextArea} / ..." / Enter — пропустить): `) : '';
+      const nextDescs = await collectDescriptions();
+      if (!nextDescs) break;
+      blocks.push({ area: nextArea, subArea: nextSubArea, descriptions: nextDescs });
+    }
+
+    return { category, blocks };
+  };
+
+  // первая категория — обязательна
+  console.log('\nКатегория:');
+  CATEGORIES.forEach((c, i) => console.log(`  ${i + 1}) ${c}`));
+  const firstCatIdx = await askChoice(rl, 'Выбор [1]: ', CATEGORIES.length);
+  const firstSection = await collectCategoryBlock(CATEGORIES[firstCatIdx]);
+  if (!firstSection) {
     console.log('Описание не введено, отмена.\n');
     rl.close();
     process.exit(1);
   }
-  blocks.push({ area: firstArea, subArea: firstSubArea, descriptions: firstDescs });
+  sections.push(firstSection);
 
-  // дополнительные блоки
+  // дополнительные категории
   while (true) {
-    const nextAreaRaw = await ask(rl, '\nЕщё одна функциональность? (1 — общее, Enter — завершить): ');
-    if (!nextAreaRaw) break;
-    const nextArea = resolveArea(nextAreaRaw);
-    const nextSubArea = nextArea && nextArea !== 'общее' ? await ask(rl, 'Подраздел (Enter — пропустить): ') : '';
-    const nextDescs = await collectDescriptions();
-    if (!nextDescs) break;
-    blocks.push({ area: nextArea, subArea: nextSubArea, descriptions: nextDescs });
+    console.log('\nДобавить ещё одну категорию?');
+    CATEGORIES.forEach((c, i) => console.log(`  ${i + 1}) ${c}`));
+    const nextCatRaw = await ask(rl, 'Выбор (Enter — завершить): ');
+    if (!nextCatRaw) break;
+    const nextCatIdx = parseInt(nextCatRaw, 10) - 1;
+    if (isNaN(nextCatIdx) || nextCatIdx < 0 || nextCatIdx >= CATEGORIES.length) {
+      console.log(`  ✗ Некорректный ввод — введите число от 1 до ${CATEGORIES.length}`);
+      continue;
+    }
+    const nextSection = await collectCategoryBlock(CATEGORIES[nextCatIdx]);
+    if (!nextSection) break;
+    sections.push(nextSection);
   }
 
-  const doCommit = await askYesNo(rl, '\nСделать коммит сразу? (y/n) [y]: ', true);
+  const commitInput = await ask(rl, '\nСделать коммит сразу? (1 — да, Enter — нет): ');
+  const doCommit = commitInput.trim() === '1';
 
   rl.close();
 
-  const body = blocks
-    .map((block) => {
-      const areaLine = buildAreaLine(block.area, block.subArea);
-      return areaLine
-        ? `- ${areaLine}\n${block.descriptions.map((d) => `    - ${d}`).join('\n')}`
-        : block.descriptions.map((d) => `- ${d}`).join('\n');
-    })
-    .join('\n');
+  const builtSections = sections.map(({ category, blocks }) => {
+    const body = blocks
+      .map(({ area, subArea, descriptions }) => {
+        const areaLine = buildAreaLine(area, subArea);
+        return areaLine
+          ? `- ${areaLine}\n${descriptions.map((d) => `    - ${d}`).join('\n')}`
+          : descriptions.map((d) => `- ${d}`).join('\n');
+      })
+      .join('\n');
+    return { category, body };
+  });
 
-  prependToChangelog(newVersion, category, body);
+  prependToChangelog(newVersion, builtSections, skipVersionBump);
 
   if (!skipVersionBump) {
     execSync(`npm version ${newVersion} --no-git-tag-version`, {
