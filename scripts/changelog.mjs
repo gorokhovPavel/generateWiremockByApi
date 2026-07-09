@@ -144,38 +144,60 @@ async function main() {
   const catIndex = await askChoice(rl, 'Выбор [1]: ', CATEGORIES.length);
   const category = CATEGORIES[catIndex];
 
-  // functional area
-  const area = await ask(rl, '\nФункциональность (Enter — пропустить): ');
-  const subArea = area ? await ask(rl, 'Подраздел в функциональности .../... (Enter — пропустить): ') : '';
+  // collect one block: area + subArea + descriptions
+  const collectDescriptions = async () => {
+    const first = await ask(rl, 'Описание: ');
+    if (!first) return null;
+    const list = [first];
+    while (true) {
+      const extra = await ask(rl, 'Ещё одно описание? (Enter — пропустить): ');
+      if (!extra) break;
+      list.push(extra);
+    }
+    return list;
+  };
 
-  // description(s)
-  const firstDesc = await ask(rl, 'Описание: ');
-  if (!firstDesc) {
+  const buildAreaLine = (area, subArea) => {
+    if (!area) return null;
+    if (area.toLowerCase() === 'общее') return 'общее';
+    return `функциональность "${area}"${subArea ? ` / "${subArea}"` : ''}`;
+  };
+
+  const blocks = [];
+
+  // первый блок — функциональность опциональна
+  const firstArea = await ask(rl, '\nФункциональность (Enter — пропустить): ');
+  const firstSubArea = firstArea ? await ask(rl, 'Подраздел (Enter — пропустить): ') : '';
+  const firstDescs = await collectDescriptions();
+  if (!firstDescs) {
     console.log('Описание не введено, отмена.\n');
     rl.close();
     process.exit(1);
   }
-  const descriptions = [firstDesc];
+  blocks.push({ area: firstArea, subArea: firstSubArea, descriptions: firstDescs });
 
+  // дополнительные блоки
   while (true) {
-    const extra = await ask(rl, 'Ещё одно описание? (Enter — пропустить): ');
-    if (!extra) break;
-    descriptions.push(extra);
+    const nextArea = await ask(rl, '\nЕщё одна функциональность? (Enter — завершить): ');
+    if (!nextArea) break;
+    const nextSubArea = await ask(rl, 'Подраздел (Enter — пропустить): ');
+    const nextDescs = await collectDescriptions();
+    if (!nextDescs) break;
+    blocks.push({ area: nextArea, subArea: nextSubArea, descriptions: nextDescs });
   }
 
   const doCommit = await askYesNo(rl, '\nСделать коммит сразу? (y/n) [y]: ', true);
 
   rl.close();
 
-  const areaLine = area
-    ? area.toLowerCase() === 'общее'
-      ? 'общее'
-      : `функциональность "${area}"${subArea ? ` / "${subArea}"` : ''}`
-    : null;
-
-  const body = areaLine
-    ? `- ${areaLine}\n${descriptions.map((d) => `    - ${d}`).join('\n')}`
-    : descriptions.map((d) => `- ${d}`).join('\n');
+  const body = blocks
+    .map((block) => {
+      const areaLine = buildAreaLine(block.area, block.subArea);
+      return areaLine
+        ? `- ${areaLine}\n${block.descriptions.map((d) => `    - ${d}`).join('\n')}`
+        : block.descriptions.map((d) => `- ${d}`).join('\n');
+    })
+    .join('\n');
 
   prependToChangelog(newVersion, category, body);
 
