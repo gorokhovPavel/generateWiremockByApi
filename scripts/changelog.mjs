@@ -119,13 +119,6 @@ async function main() {
   console.log(recentCommits().split('\n').map((l) => '  ' + l).join('\n'));
   console.log('');
 
-  const proceed = await askYesNo(rl, 'Обновить CHANGELOG? (y/n): ', false);
-  if (!proceed) {
-    console.log('Пропущено.\n');
-    rl.close();
-    process.exit(0);
-  }
-
   // bump type
   const ver = currentVersion();
   console.log(`\nТекущая версия: ${ver}`);
