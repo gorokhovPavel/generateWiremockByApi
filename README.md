@@ -599,3 +599,28 @@ export default defineConfig(() => {
     "micromatch": "4.0.8"
   }
 }
+
+//
+
+    tools: {
+      rspack: {
+        output: {
+          globalObject: 'self',
+        },
+        plugins: [
+          new rspack.BannerPlugin({
+            banner: `/* Версия приложения ${pkg.version} */`,
+            raw: true,
+          }),
+          new rspack.ContextReplacementPlugin(
+            /date-fns[/\\]/,
+            new RegExp(`[/\\\\](${supportedLocales.join('|')})[/\\\\]index\\.js$`),
+          ),
+          // Подменяет полный lodash на tree-shakeable lodash-es даже внутри node_modules
+          new rspack.NormalModuleReplacementPlugin(/^lodash$/, 'lodash-es'),
+          new rspack.NormalModuleReplacementPlugin(/^lodash\/(.*)$/, (resource) => {
+            resource.request = resource.request.replace(/^lodash\//, 'lodash-es/');
+          }),
+        ],
+      },
+
