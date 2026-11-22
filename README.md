@@ -499,6 +499,10 @@ export default defineConfig(() => {
   },
   "devDependencies": {
     "@babel/core": "^7.29.6",
+    "@babel/plugin-transform-runtime": "^7.25.9",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
+    "@babel/preset-typescript": "^7.26.0",
     "@commitlint/cli": "17.6.7",
     "@commitlint/config-conventional": "17.6.7",
     "@effector/swc-plugin": "^0.6.0",
@@ -539,6 +543,7 @@ export default defineConfig(() => {
     "@vitest/ui": "^3.2.6",
     "@wojtekmaj/enzyme-adapter-react-17": "0.8.0",
     "ajv-formats": "2.1.1",
+    "babel-plugin-styled-components": "^2.1.4",
     "braces": "3.0.3",
     "commitlint": "17.6.7",
     "core-js": "^3.24.1",
@@ -576,6 +581,8 @@ export default defineConfig(() => {
     "tslib": "2.6.0",
     "type-fest": "^2.19.0",
     "typescript": "5.1.6",
+    "vite-plugin-svgr": "^4.3.0",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.6",
     "webpack-middleware-swagger-faker": "0.0.23"
   },
