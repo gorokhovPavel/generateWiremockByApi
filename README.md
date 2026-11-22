@@ -111,8 +111,6 @@ import pkg from './package.json' with { type: 'json' };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isDevMode = process.env.NODE_ENV === 'development';
-
-// Переменные окружения (при необходимости подставьте ваши хелперы из старого конфига)
 const isMockMode = process.env.IS_MOCK_MODE === 'true';
 const isWiremockMode = process.env.IS_WIREMOCK_MODE === 'true';
 const isLocalDevEnv = process.env.IS_LOCAL_DEV_ENV === 'true';
@@ -124,9 +122,7 @@ export default defineConfig({
   plugins: [
     pluginTypeCheck({
       forkTsCheckerOptions: {
-        typescript: {
-          memoryLimit: 4096,
-        },
+        typescript: { memoryLimit: 4096 },
       },
     }),
     pluginReact(),
@@ -144,9 +140,7 @@ export default defineConfig({
   ],
 
   source: {
-    entry: {
-      index: './src/index.js',
-    },
+    entry: { index: './src/index.js' },
     define: {
       PUBLIC_PATH: '""',
       IS_LOCAL_DEV_ENV: JSON.stringify(isLocalDevEnv),
@@ -154,28 +148,19 @@ export default defineConfig({
       IS_WIREMOCK_MODE: JSON.stringify(isWiremockMode),
       BUILD_VERSION: JSON.stringify(buildVersion),
       APP_VERSION: JSON.stringify(pkg.version),
-      // Верните сюда объект mergedFeatureFlags из вашего исходного конфига
       FEATURE_FLAGS: JSON.stringify({}),
     },
     transformImport: [
-      {
-        libraryName: 'lodash',
-        customName: 'lodash/{{ member }}',
-      },
+      { libraryName: 'lodash', customName: 'lodash/{{ member }}' },
     ],
   },
 
   resolve: {
-    alias: {
-      '~': path.resolve(__dirname, 'src'),
-    },
+    alias: { '~': path.resolve(__dirname, 'src') },
   },
 
   output: {
-    distPath: {
-      root: 'build',
-    },
-    // 'auto' в prod решает проблему 502 / ChunkLoadError на IFT-стенде
+    distPath: { root: 'build' },
     assetPrefix: isDevMode ? '/' : 'auto',
     polyfill: 'usage',
     sourceMap: {
@@ -189,15 +174,6 @@ export default defineConfig({
   dev: {
     hmr: true,
     liveReload: true,
-    // Верните сюда вашу функцию setupMiddlewares для моков (если используется)
-    setupMiddlewares: isMockMode
-      ? [
-          (middlewares) => {
-            // Ваши bodyParserMiddleware, forceErrorMiddleware, mockMiddlewares
-            return middlewares;
-          },
-        ]
-      : undefined,
   },
 
   server: {
@@ -220,40 +196,18 @@ export default defineConfig({
           filename: federationConfig.filename,
           exposes: federationConfig.exposes,
           shared: {
-            react: {
-              singleton: true,
-              eager: true,
-              requiredVersion: deps.react,
-            },
-            'react-dom': {
-              singleton: true,
-              eager: true,
-              requiredVersion: deps['react-dom'],
-            },
-            '@vtb-ermo/authorization': {
-              singleton: true,
-              eager: true,
-              requiredVersion: deps['@vtb-ermo/authorization'],
-            },
-            '@vtb-ermo/notifications': {
-              singleton: true,
-              eager: true,
-              requiredVersion: deps['@vtb-ermo/notifications'],
-            },
-            'styled-components': {
-              singleton: true,
-              eager: true,
-              requiredVersion: deps['styled-components'],
-            },
+            react: { singleton: true, eager: true, requiredVersion: deps.react },
+            'react-dom': { singleton: true, eager: true, requiredVersion: deps['react-dom'] },
+            '@vtb-ermo/authorization': { singleton: true, eager: true, requiredVersion: deps['@vtb-ermo/authorization'] },
+            '@vtb-ermo/notifications': { singleton: true, eager: true, requiredVersion: deps['@vtb-ermo/notifications'] },
+            'styled-components': { singleton: true, eager: true, requiredVersion: deps['styled-components'] },
           },
         },
       },
 
   tools: {
     rspack: {
-      output: {
-        globalObject: 'self',
-      },
+      output: { globalObject: 'self' },
       plugins: [
         new rspack.BannerPlugin({
           banner: `/* Версия приложения ${pkg.version} */`,
